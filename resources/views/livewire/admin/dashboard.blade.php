@@ -30,10 +30,10 @@
     <!-- Live Attendance GPS Map Card -->
     <x-ui.card class="space-y-4" x-data="{
         map: null,
-        schoolLat: {{ $schoolLocation?->latitude ?? -6.200000 }},
-        schoolLng: {{ $schoolLocation?->longitude ?? 106.816666 }},
-        schoolRadius: {{ $schoolLocation?->radius_meters ?? 100 }},
-        schoolName: '{{ addslashes($schoolLocation?->name ?? 'Sekolah') }}',
+        schoolLat: @js($schoolLocation?->latitude ?? -6.200000),
+        schoolLng: @js($schoolLocation?->longitude ?? 106.816666),
+        schoolRadius: @js($schoolLocation?->radius_meters ?? 100),
+        schoolName: @js($schoolLocation?->name ?? 'Sekolah'),
         students: @js($mapData),
 
         initMap() {
