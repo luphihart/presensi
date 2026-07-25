@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-primary: #4F46E5;
+    --color-primary-soft: #EEF2FF;
+    --color-success: #16A34A;
+    --color-success-soft: #DCFCE7;
+    --color-warning: #D97706;
+    --color-warning-soft: #FEF3C7;
+    --color-danger: #DC2626;
+    --color-danger-soft: #FEE2E2;
+    --color-info: #0891B2;
+    --color-info-soft: #CFFAFE;
+    --color-bg: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-text: #0F172A;
+    --color-text-muted: #64748B;
+    --color-border: #E2E8F0;
+  }
+
+  [data-theme="dark"] {
+    --color-primary: #6366F1;
+    --color-primary-soft: #1E1B4B;
+    --color-success: #22C55E;
+    --color-success-soft: #052E16;
+    --color-warning: #F59E0B;
+    --color-warning-soft: #451A03;
+    --color-danger: #EF4444;
+    --color-danger-soft: #450A0A;
+    --color-info: #06B6D4;
+    --color-info-soft: #083344;
+    --color-bg: #0F172A;
+    --color-surface: #1E293B;
+    --color-text: #F1F5F9;
+    --color-text-muted: #94A3B8;
+    --color-border: #334155;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+@keyframes bounce-short {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-bounce-short {
+  animation: bounce-short 1.5s ease-in-out 3;
+}
