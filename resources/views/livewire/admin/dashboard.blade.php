@@ -34,7 +34,7 @@
         schoolLng: {{ $schoolLocation?->longitude ?? 106.816666 }},
         schoolRadius: {{ $schoolLocation?->radius_meters ?? 100 }},
         schoolName: '{{ addslashes($schoolLocation?->name ?? 'Sekolah') }}',
-        students: {{ json_encode($mapData) }},
+        students: @js($mapData),
 
         initMap() {
             if (this.map) return;
