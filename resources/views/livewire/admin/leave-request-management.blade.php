@@ -35,7 +35,7 @@
                 <tbody class="divide-y divide-[var(--color-border)] text-[var(--color-text)]">
                     @forelse($requests as $item)
                         <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
-                            <td class="px-6 py-4 font-semibold whitespace-nowrap">{{ $item->date->format('d/m/Y') }}</td>
+                            <td class="px-6 py-4 font-semibold whitespace-nowrap">{{ $item->date->isoFormat('D MMMM YYYY') }}</td>
                             <td class="px-6 py-4 font-bold whitespace-nowrap">{{ $item->student->user->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap"><x-ui.badge type="info" :value="$item->student->classRoom->name" /></td>
                             <td class="px-6 py-4 font-semibold text-cyan-600 dark:text-cyan-400 whitespace-nowrap">{{ $item->type->label() }}</td>

@@ -59,7 +59,7 @@
                     <tbody class="divide-y divide-[var(--color-border)] text-[var(--color-text)]">
                         @forelse($holidays as $h)
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
-                                <td class="px-4 py-3 font-semibold">{{ $h->date->format('d/m/Y') }}</td>
+                                <td class="px-4 py-3 font-semibold">{{ $h->date->isoFormat('D MMMM YYYY') }}</td>
                                 <td class="px-4 py-3 font-bold">{{ $h->name }}</td>
                                 <td class="px-4 py-3">
                                     <x-ui.badge :type="$h->type === 'national' ? 'danger' : 'info'" :value="$h->type === 'national' ? 'Nasional' : 'Sekolah'" />

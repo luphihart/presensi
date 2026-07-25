@@ -81,7 +81,7 @@
                             <span class="font-bold text-sm text-[var(--color-text)]">{{ $item->type->label() }}</span>
                             <x-ui.badge :type="strtolower($item->status->value)" :value="$item->status->label()" />
                         </div>
-                        <p class="text-xs text-[var(--color-text-muted)]">Tanggal: {{ $item->date->format('d MMMM YYYY') }}</p>
+                        <p class="text-xs text-[var(--color-text-muted)]">Tanggal: {{ $item->date->isoFormat('D MMMM YYYY') }}</p>
                         <p class="text-xs text-[var(--color-text)] line-clamp-2">"{{ $item->reason }}"</p>
                         @if($item->review_note)
                             <p class="text-xs text-amber-600 dark:text-amber-400 italic">Catatan Admin: {{ $item->review_note }}</p>

@@ -19,7 +19,7 @@ class AttendanceMatrixExport implements FromView, ShouldAutoSize, WithStyles
     {
         return view('reports.attendance-excel', array_merge($this->reportData, [
             'title' => $this->title,
-            'generated_at' => now()->format('d/m/Y H:i'),
+            'generated_at' => now()->isoFormat('D MMMM YYYY H:i'),
         ]));
     }
 

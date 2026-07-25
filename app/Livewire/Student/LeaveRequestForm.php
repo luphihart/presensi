@@ -67,7 +67,7 @@ class LeaveRequestForm extends Component
                 'user_id' => $admin->id,
                 'type' => \App\Enums\NotificationType::NewLeaveRequest,
                 'title' => 'Pengajuan Izin Baru',
-                'body' => $student->user->name . ' mengajukan ' . $leave->type->label() . ' untuk tanggal ' . $leave->date->format('d/m/Y'),
+                'body' => $student->user->name . ' mengajukan ' . $leave->type->label() . ' untuk tanggal ' . $leave->date->isoFormat('D MMMM YYYY'),
                 'related_type' => LeaveRequest::class,
                 'related_id' => $leave->id,
             ]);

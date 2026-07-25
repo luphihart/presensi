@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Carbon\Carbon::setLocale('id');
+        setlocale(LC_TIME, 'id_ID.utf8', 'id_ID', 'id', 'indonesian');
         \App\Models\Attendance::observe(\App\Observers\AttendanceObserver::class);
     }
 }

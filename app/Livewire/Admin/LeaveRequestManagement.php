@@ -48,7 +48,7 @@ class LeaveRequestManagement extends Component
             'user_id' => $leave->student->user_id,
             'type' => \App\Enums\NotificationType::LeaveStatus,
             'title' => 'Pengajuan Izin Disetujui',
-            'body' => 'Pengajuan ' . $leave->type->label() . ' Anda untuk tanggal ' . $leave->date->format('d/m/Y') . ' telah DISETUJUI oleh admin.',
+            'body' => 'Pengajuan ' . $leave->type->label() . ' Anda untuk tanggal ' . $leave->date->isoFormat('D MMMM YYYY') . ' telah DISETUJUI oleh admin.',
             'related_type' => LeaveRequest::class,
             'related_id' => $leave->id,
         ]);
@@ -70,7 +70,7 @@ class LeaveRequestManagement extends Component
             'user_id' => $leave->student->user_id,
             'type' => \App\Enums\NotificationType::LeaveStatus,
             'title' => 'Pengajuan Izin Ditolak',
-            'body' => 'Pengajuan ' . $leave->type->label() . ' Anda untuk tanggal ' . $leave->date->format('d/m/Y') . ' DITOLAK oleh admin.',
+            'body' => 'Pengajuan ' . $leave->type->label() . ' Anda untuk tanggal ' . $leave->date->isoFormat('D MMMM YYYY') . ' DITOLAK oleh admin.',
             'related_type' => LeaveRequest::class,
             'related_id' => $leave->id,
         ]);

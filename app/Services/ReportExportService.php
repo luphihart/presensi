@@ -13,7 +13,7 @@ class ReportExportService
     {
         $data = array_merge($reportData, [
             'title' => $title,
-            'generated_at' => now()->format('d/m/Y H:i'),
+            'generated_at' => now()->isoFormat('D MMMM YYYY H:i'),
         ]);
 
         return Pdf::loadView('reports.attendance-pdf', $data)
