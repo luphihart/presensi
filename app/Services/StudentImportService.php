@@ -7,8 +7,10 @@ use App\Models\ClassRoom;
 use App\Models\SchoolYear;
 use App\Models\Student;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class StudentImportService
 {
@@ -19,6 +21,9 @@ class StudentImportService
      */
     public function import(array $rows): array
     {
+        // Increase execution time for bulk imports
+        set_time_limit(300);
+
         $schoolYear = SchoolYear::getActive();
         if (!$schoolYear) {
             return ['success' => false, 'message' => 'Tidak ada tahun ajaran aktif.'];
@@ -90,7 +95,7 @@ class StudentImportService
             $password = trim((string)($row[$colIndex['password']] ?? ''));
             $className = trim((string)($row[$colIndex['class']] ?? ''));
             $gender = strtoupper(trim((string)($row[$colIndex['gender']] ?? 'L')));
-            $birthDate = trim((string)($row[$colIndex['birth_date']] ?? ''));
+            $rawBirthDate = trim((string)($row[$colIndex['birth_date']] ?? ''));
             $phone = trim((string)($row[$colIndex['phone']] ?? ''));
             $address = trim((string)($row[$colIndex['address']] ?? ''));
 
@@ -99,8 +104,22 @@ class StudentImportService
                 continue;
             }
 
+            // Safe birth date parsing
+            $formattedBirthDate = '2010-01-01';
+            if (!empty($rawBirthDate)) {
+                try {
+                    if (is_numeric($rawBirthDate)) {
+                        $formattedBirthDate = ExcelDate::excelToDateTimeObject((float)$rawBirthDate)->format('Y-m-d');
+                    } else {
+                        $formattedBirthDate = Carbon::parse($rawBirthDate)->format('Y-m-d');
+                    }
+                } catch (\Throwable $t) {
+                    $formattedBirthDate = '2010-01-01';
+                }
+            }
+
             try {
-                DB::transaction(function () use ($schoolYear, $name, $email, $password, $nis, $className, $birthDate, $gender, $phone, $address, &$imported) {
+                DB::transaction(function () use ($schoolYear, $name, $email, $password, $nis, $className, $formattedBirthDate, $gender, $phone, $address, &$imported) {
                     $classRoom = ClassRoom::firstOrCreate([
                         'school_year_id' => $schoolYear->id,
                         'name' => $className,
@@ -140,7 +159,7 @@ class StudentImportService
                         'class_room_id' => $classRoom->id,
                         'nis' => $nis,
                         'gender' => in_array($gender, ['L', 'P']) ? $gender : 'L',
-                        'birth_date' => !empty($birthDate) ? $birthDate : '2010-01-01',
+                        'birth_date' => $formattedBirthDate,
                         'phone' => !empty($phone) ? $phone : null,
                         'address' => !empty($address) ? $address : null,
                         'enrolled_at' => now()->toDateString(),
