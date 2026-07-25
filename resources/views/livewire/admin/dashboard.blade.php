@@ -165,8 +165,8 @@
             @forelse($pendingLeaves as $item)
                 <div class="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                        <p class="font-bold text-sm text-[var(--color-text)]">{{ $item->student->user->name }} ({{ $item->student->classRoom->name }})</p>
-                        <p class="text-xs text-[var(--color-text-muted)]">Tanggal: {{ $item->date->format('d/m/Y') }} • Jenis: <span class="font-semibold text-cyan-600 dark:text-cyan-400">{{ $item->type->label() }}</span></p>
+                        <p class="font-bold text-sm text-[var(--color-text)]">{{ $item->student?->user?->name ?? 'Murid' }} ({{ $item->student?->classRoom?->name ?? '-' }})</p>
+                        <p class="text-xs text-[var(--color-text-muted)]">Tanggal: {{ $item->date?->format('d/m/Y') ?? '-' }} • Jenis: <span class="font-semibold text-cyan-600 dark:text-cyan-400">{{ $item->type?->label() ?? 'Izin' }}</span></p>
                         <p class="text-xs text-[var(--color-text)] mt-0.5">"{{ $item->reason }}"</p>
                     </div>
 
