@@ -93,15 +93,24 @@ class Dashboard extends Component
             ->values()
             ->toArray();
 
+        $mapConfigJson = json_encode([
+            'schoolLat'    => $schoolLocation?->latitude ?? -6.200000,
+            'schoolLng'    => $schoolLocation?->longitude ?? 106.816666,
+            'schoolRadius' => $schoolLocation?->radius_meters ?? 100,
+            'schoolName'   => $schoolLocation?->name ?? 'Sekolah',
+            'students'     => $mapData,
+        ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE);
+
         return view('livewire.admin.dashboard', [
             'totalStudents' => $totalStudents,
-            'totalHadir' => $totalHadir,
-            'totalTerlambat' => $totalTerlambat,
-            'totalIzin' => $totalIzin,
-            'totalAlpa' => $totalAlpa,
+            'totalHadir'    => $totalHadir,
+            'totalTerlambat'=> $totalTerlambat,
+            'totalIzin'     => $totalIzin,
+            'totalAlpa'     => $totalAlpa,
             'pendingLeaves' => $pendingLeaves,
-            'schoolLocation' => $schoolLocation,
-            'mapData' => $mapData,
+            'schoolLocation'=> $schoolLocation,
+            'mapData'       => $mapData,
+            'mapConfigJson' => $mapConfigJson,
         ]);
     }
 }

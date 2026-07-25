@@ -28,16 +28,8 @@
     </div>
 
     <!-- Live Attendance GPS Map Card -->
-    {{-- Pass map data to JS safely via @json in its own script tag --}}
-    <script>
-        window.__mapConfig = @json([
-            'schoolLat'    => $schoolLocation?->latitude ?? -6.200000,
-            'schoolLng'    => $schoolLocation?->longitude ?? 106.816666,
-            'schoolRadius' => $schoolLocation?->radius_meters ?? 100,
-            'schoolName'   => $schoolLocation?->name ?? 'Sekolah',
-            'students'     => $mapData,
-        ]);
-    </script>
+    {{-- Map config is pre-encoded as JSON string in Dashboard.php render() --}}
+    <script>window.__mapConfig = {!! $mapConfigJson !!};</script>
 
     <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 shadow-sm space-y-4"
          x-data="attendanceMap()"
