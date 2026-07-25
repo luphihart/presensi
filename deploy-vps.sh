@@ -19,11 +19,12 @@ composer install --no-dev --optimize-autoloader
 echo "🗄️ 3/7 Running Database Migrations..."
 php artisan migrate --force
 
-# 4. Storage Link & Permission
-echo "📁 4/7 Linking Storage & Fixing Permissions..."
+# 4. Storage Link, Livewire Assets & Permission
+echo "📁 4/7 Linking Storage, Publishing Livewire Assets & Fixing Permissions..."
 php artisan storage:link --quiet
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+php artisan livewire:publish --assets --quiet
+chown -R www-data:www-data storage bootstrap/cache public/vendor
+chmod -R 775 storage bootstrap/cache public/vendor
 
 # 5. Build Assets (Vite) jika NodeJS tersedia
 if command -v npm &> /dev/null
