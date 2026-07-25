@@ -31,7 +31,7 @@
             <div class="w-10 h-10 rounded-xl bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-lg">P</div>
             <div>
                 <h1 class="font-bold text-base leading-tight">Presensi Murid</h1>
-                <p class="text-xs text-[var(--color-text-muted)]">SMA Negeri 1</p>
+                <p class="text-xs text-[var(--color-text-muted)]">{{ \App\Models\Setting::get('school_name', 'Presensi Sekolah') }}</p>
             </div>
         </div>
 
