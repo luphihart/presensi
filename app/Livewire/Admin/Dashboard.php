@@ -6,8 +6,9 @@ use App\Enums\LeaveStatus;
 
 use App\Models\Attendance;
 use App\Models\LeaveRequest;
-use App\Models\Student;
+use App\Models\SchoolLocation;
 use App\Models\SchoolYear;
+use App\Models\Student;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -69,6 +70,29 @@ class Dashboard extends Component
             ->take(5)
             ->get();
 
+        $schoolLocation = SchoolLocation::first();
+
+        $mapData = Attendance::where('date', $today)
+            ->whereNotNull('check_in_latitude')
+            ->whereNotNull('check_in_longitude')
+            ->with(['student.user', 'student.classRoom'])
+            ->get()
+            ->map(fn($att) => [
+                'id' => $att->id,
+                'name' => $att->student?->user?->name ?? 'Murid',
+                'class' => $att->student?->classRoom?->name ?? '-',
+                'nis' => $att->student?->nis ?? '-',
+                'status' => $att->status->label(),
+                'status_val' => strtolower($att->status->value),
+                'time' => $att->check_in_at ? $att->check_in_at->format('H:i') . ' WIB' : '-',
+                'distance' => $att->check_in_distance_meters !== null ? round($att->check_in_distance_meters) : 0,
+                'lat' => (float)$att->check_in_latitude,
+                'lng' => (float)$att->check_in_longitude,
+                'photo' => $att->check_in_photo_path ? asset('storage/' . $att->check_in_photo_path) : null,
+            ])
+            ->values()
+            ->toArray();
+
         return view('livewire.admin.dashboard', [
             'totalStudents' => $totalStudents,
             'totalHadir' => $totalHadir,
@@ -76,6 +100,8 @@ class Dashboard extends Component
             'totalIzin' => $totalIzin,
             'totalAlpa' => $totalAlpa,
             'pendingLeaves' => $pendingLeaves,
+            'schoolLocation' => $schoolLocation,
+            'mapData' => $mapData,
         ]);
     }
 }
