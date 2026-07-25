@@ -36,9 +36,9 @@ class Login extends Component
             $user->update(['last_login_at' => now()]);
 
             if ($user->role === UserRole::Admin) {
-                $this->redirectRoute('admin.dashboard', navigate: true);
+                $this->redirectRoute('admin.dashboard');
             } else {
-                $this->redirectRoute('student.dashboard', navigate: true);
+                $this->redirectRoute('student.dashboard');
             }
             return;
         }
