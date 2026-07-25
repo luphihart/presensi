@@ -20,6 +20,7 @@ use App\Livewire\Admin\ClassRoomManagement;
 use App\Livewire\Admin\ScheduleManagement;
 use App\Livewire\Admin\HolidayCalendar;
 use App\Livewire\Admin\ReportGenerator;
+use App\Livewire\Admin\SchoolSettings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -70,4 +71,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/locations', SchoolLocationManagement::class)->name('locations.index');
     Route::get('/holidays', HolidayCalendar::class)->name('holidays.index');
     Route::get('/reports', ReportGenerator::class)->name('reports.index');
+    Route::get('/settings', SchoolSettings::class)->name('settings.index');
 });
