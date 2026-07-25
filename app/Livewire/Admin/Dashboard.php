@@ -59,10 +59,10 @@ class Dashboard extends Component
 
         $todayAttendances = Attendance::where('date', $today)->get();
 
-        $totalHadir = $todayAttendances->where('status.value', 'hadir')->count();
-        $totalTerlambat = $todayAttendances->where('status.value', 'terlambat')->count();
-        $totalIzin = $todayAttendances->whereIn('status.value', ['izin', 'sakit'])->count();
-        $totalAlpa = $todayAttendances->where('status.value', 'alpa')->count();
+        $totalHadir = $todayAttendances->filter(fn($a) => $a->status?->value === 'hadir')->count();
+        $totalTerlambat = $todayAttendances->filter(fn($a) => $a->status?->value === 'terlambat')->count();
+        $totalIzin = $todayAttendances->filter(fn($a) => in_array($a->status?->value, ['izin', 'sakit']))->count();
+        $totalAlpa = $todayAttendances->filter(fn($a) => $a->status?->value === 'alpa')->count();
 
         $pendingLeaves = LeaveRequest::where('status', LeaveStatus::Pending)
             ->with(['student.user', 'student.classRoom'])
@@ -82,8 +82,8 @@ class Dashboard extends Component
                 'name' => $att->student?->user?->name ?? 'Murid',
                 'class' => $att->student?->classRoom?->name ?? '-',
                 'nis' => $att->student?->nis ?? '-',
-                'status' => $att->status->label(),
-                'status_val' => strtolower($att->status->value),
+                'status' => $att->status?->label() ?? 'Hadir',
+                'status_val' => $att->status ? strtolower($att->status->value) : 'hadir',
                 'time' => $att->check_in_at ? $att->check_in_at->format('H:i') . ' WIB' : '-',
                 'distance' => $att->check_in_distance_meters !== null ? round($att->check_in_distance_meters) : 0,
                 'lat' => (float)$att->check_in_latitude,
