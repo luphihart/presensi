@@ -28,95 +28,21 @@
     </div>
 
     <!-- Live Attendance GPS Map Card -->
-    <x-ui.card class="space-y-4" x-data="{
-        map: null,
-        schoolLat: @js($schoolLocation?->latitude ?? -6.200000),
-        schoolLng: @js($schoolLocation?->longitude ?? 106.816666),
-        schoolRadius: @js($schoolLocation?->radius_meters ?? 100),
-        schoolName: @js($schoolLocation?->name ?? 'Sekolah'),
-        students: @js($mapData),
+    {{-- Pass map data to JS via hidden element to avoid @js inside blade component attribute --}}
+    <script>
+        window.__mapConfig = @json([
+            'schoolLat'    => $schoolLocation?->latitude ?? -6.200000,
+            'schoolLng'    => $schoolLocation?->longitude ?? 106.816666,
+            'schoolRadius' => $schoolLocation?->radius_meters ?? 100,
+            'schoolName'   => $schoolLocation?->name ?? 'Sekolah',
+            'students'     => $mapData,
+        ]);
+    </script>
 
-        initMap() {
-            if (this.map) return;
-            
-            // Initialize Leaflet Map
-            this.map = L.map(this.$refs.mapContainer).setView([this.schoolLat, this.schoolLng], 16);
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 shadow-sm space-y-4"
+         x-data="attendanceMap()"
+         x-init="init()">
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap'
-            }).addTo(this.map);
-
-            // School Geofence Radius Circle
-            L.circle([this.schoolLat, this.schoolLng], {
-                color: '#4F46E5',
-                fillColor: '#6366F1',
-                fillOpacity: 0.15,
-                radius: this.schoolRadius,
-                weight: 2,
-                dashArray: '5, 5'
-            }).addTo(this.map);
-
-            // School Marker
-            const schoolIcon = L.divIcon({
-                className: 'custom-school-pin',
-                html: `<div class='w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-lg border-2 border-white text-lg animate-pulse'>🏢</div>`,
-                iconSize: [40, 40],
-                iconAnchor: [20, 20]
-            });
-
-            L.marker([this.schoolLat, this.schoolLng], { icon: schoolIcon })
-                .addTo(this.map)
-                .bindPopup(`<div class='p-1 text-center'><strong class='text-sm text-indigo-900'>🏢 ${this.schoolName}</strong><br><span class='text-xs text-slate-500'>Radius Presensi: ${this.schoolRadius} meter</span></div>`);
-
-            // Add Student Attendance Markers
-            this.students.forEach(s => {
-                const color = s.status_val === 'terlambat' ? 'bg-amber-500' : 'bg-emerald-500';
-                const badgeColor = s.status_val === 'terlambat' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800';
-
-                const pinIcon = L.divIcon({
-                    className: 'custom-student-pin',
-                    html: `<div class='w-8 h-8 rounded-full ${color} text-white flex items-center justify-center font-bold text-xs shadow-md border-2 border-white transform hover:scale-125 transition-all'>📍</div>`,
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16]
-                });
-
-                let photoHtml = '';
-                if (s.photo) {
-                    photoHtml = `<div class='mt-2 text-center'><img src='${s.photo}' class='w-16 h-16 rounded-xl object-cover border mx-auto cursor-pointer shadow-sm' onclick="window.showMapPhoto('${s.photo}', 'Foto Presensi ${s.name}')"></div>`;
-                }
-
-                const popupContent = `
-                    <div class='p-2 max-w-[200px] text-slate-800 text-xs space-y-1.5'>
-                        <div class='flex items-center justify-between'>
-                            <strong class='text-sm font-bold text-slate-900 block truncate'>${s.name}</strong>
-                        </div>
-                        <p class='text-[11px] text-slate-500'>Kelas ${s.class} • NIS ${s.nis}</p>
-                        <div class='flex items-center justify-between pt-1'>
-                            <span class='px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeColor} uppercase'>${s.status}</span>
-                            <span class='font-mono text-[11px] text-slate-600'>${s.time}</span>
-                        </div>
-                        <p class='text-[10px] text-slate-500 italic pt-0.5'>Jarak: ${s.distance} m dari sekolah</p>
-                        ${photoHtml}
-                    </div>
-                `;
-
-                L.marker([s.lat, s.lng], { icon: pinIcon })
-                    .addTo(this.map)
-                    .bindPopup(popupContent);
-            });
-
-            // Adjust bounds if students exist
-            if (this.students.length > 0) {
-                const group = L.featureGroup([
-                    L.marker([this.schoolLat, this.schoolLng]),
-                    ...this.students.map(s => L.marker([s.lat, s.lng]))
-                ]);
-                this.map.fitBounds(group.getBounds().pad(0.2));
-            }
-        }
-    }" x-init="setTimeout(() => initMap(), 300)">
-        
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--color-border)] pb-3">
             <div>
                 <h3 class="text-base font-bold text-[var(--color-text)] flex items-center space-x-2">
@@ -124,7 +50,7 @@
                 </h3>
                 <p class="text-xs text-[var(--color-text-muted)]">Pantau posisi GPS murid saat melakukan presensi masuk hari ini</p>
             </div>
-            
+
             <div class="flex items-center space-x-3 text-xs">
                 <span class="flex items-center space-x-1">
                     <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
@@ -143,16 +69,105 @@
 
         <!-- Map Container -->
         <div class="relative w-full h-[400px] rounded-2xl overflow-hidden border border-[var(--color-border)] bg-slate-900 shadow-inner z-10">
-            <div x-ref="mapContainer" class="w-full h-full"></div>
+            <div id="adminAttendanceMap" class="w-full h-full"></div>
         </div>
+    </div>
 
-        <script>
-            window.showMapPhoto = function(url, title) {
-                const event = new CustomEvent('open-map-photo', { detail: { url: url, title: title } });
-                window.dispatchEvent(event);
+    <script>
+        function attendanceMap() {
+            return {
+                map: null,
+                init() {
+                    setTimeout(() => this.initMap(), 300);
+                },
+                initMap() {
+                    if (this.map || typeof L === 'undefined') return;
+
+                    const cfg = window.__mapConfig || {};
+                    const schoolLat    = cfg.schoolLat    || -6.200000;
+                    const schoolLng    = cfg.schoolLng    || 106.816666;
+                    const schoolRadius = cfg.schoolRadius || 100;
+                    const schoolName   = cfg.schoolName   || 'Sekolah';
+                    const students     = cfg.students     || [];
+
+                    this.map = L.map('adminAttendanceMap').setView([schoolLat, schoolLng], 16);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(this.map);
+
+                    // Geofence circle
+                    L.circle([schoolLat, schoolLng], {
+                        color: '#4F46E5',
+                        fillColor: '#6366F1',
+                        fillOpacity: 0.15,
+                        radius: schoolRadius,
+                        weight: 2,
+                        dashArray: '5, 5'
+                    }).addTo(this.map);
+
+                    // School marker
+                    const schoolIcon = L.divIcon({
+                        className: 'custom-school-pin',
+                        html: "<div style='width:40px;height:40px;border-radius:12px;background:#4F46E5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.3)'>🏢</div>",
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
+                    });
+
+                    L.marker([schoolLat, schoolLng], { icon: schoolIcon })
+                        .addTo(this.map)
+                        .bindPopup("<div style='text-align:center;padding:4px'><strong style='color:#3730a3'>🏢 " + schoolName + "</strong><br><small style='color:#64748b'>Radius: " + schoolRadius + " meter</small></div>");
+
+                    // Student markers
+                    students.forEach(function(s) {
+                        var bg    = s.status_val === 'terlambat' ? '#F59E0B' : '#10B981';
+                        var badge = s.status_val === 'terlambat'
+                            ? "background:#FEF3C7;color:#92400E"
+                            : "background:#D1FAE5;color:#065F46";
+
+                        var pinIcon = L.divIcon({
+                            className: 'custom-student-pin',
+                            html: "<div style='width:32px;height:32px;border-radius:50%;background:" + bg + ";color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)'>📍</div>",
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 16]
+                        });
+
+                        var photoHtml = s.photo
+                            ? "<div style='margin-top:8px;text-align:center'><img src='" + s.photo + "' style='width:60px;height:60px;border-radius:8px;object-fit:cover;border:1px solid #e2e8f0;margin:auto;cursor:pointer' onclick=\"window.showMapPhoto('" + s.photo + "','" + s.name + "')\"></div>"
+                            : '';
+
+                        var popup = "<div style='padding:8px;max-width:200px;font-size:12px'>"
+                            + "<strong style='font-size:13px;color:#0f172a'>" + s.name + "</strong>"
+                            + "<p style='color:#64748b;font-size:11px;margin:2px 0'>Kelas " + s.class + " • NIS " + s.nis + "</p>"
+                            + "<div style='display:flex;align-items:center;justify-content:space-between;margin-top:4px'>"
+                            + "<span style='padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;" + badge + "'>" + s.status + "</span>"
+                            + "<span style='font-family:monospace;font-size:11px;color:#475569'>" + s.time + "</span>"
+                            + "</div>"
+                            + "<p style='font-size:10px;color:#64748b;margin-top:4px'>Jarak: " + s.distance + " m</p>"
+                            + photoHtml
+                            + "</div>";
+
+                        L.marker([s.lat, s.lng], { icon: pinIcon })
+                            .addTo(this.map)
+                            .bindPopup(popup);
+                    }, this);
+
+                    // Fit bounds
+                    if (students.length > 0) {
+                        var group = L.featureGroup([
+                            L.marker([schoolLat, schoolLng]),
+                        ].concat(students.map(function(s){ return L.marker([s.lat, s.lng]); })));
+                        this.map.fitBounds(group.getBounds().pad(0.2));
+                    }
+                }
             };
-        </script>
-    </x-ui.card>
+        }
+
+        window.showMapPhoto = function(url, title) {
+            window.dispatchEvent(new CustomEvent('open-map-photo', { detail: { url: url, title: title } }));
+        };
+    </script>
 
     <!-- Quick Leave Approval Box -->
     <x-ui.card class="space-y-4">
@@ -190,7 +205,7 @@
         <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
             @keydown.escape.window="previewPhotoUrl = null"
             @click.self="previewPhotoUrl = null">
-            <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-5 max-w-md w-full shadow-2xl space-y-4 relative animate-in fade-in zoom-in duration-200">
+            <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-5 max-w-md w-full shadow-2xl space-y-4 relative">
                 <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
                     <h3 class="font-bold text-sm text-[var(--color-text)]" x-text="previewPhotoTitle"></h3>
                     <button @click="previewPhotoUrl = null" type="button" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-[var(--color-text)] flex items-center justify-center font-bold text-sm">
