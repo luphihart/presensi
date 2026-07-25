@@ -36,7 +36,7 @@
     <x-ui.card class="relative overflow-hidden border-[var(--color-primary)]/20 shadow-md">
         <div class="flex items-center justify-between mb-4">
             <span class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Presensi Hari Ini</span>
-            <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[var(--color-text-muted)]">
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-border)] shadow-xs">
                 {{ now()->isoFormat('D MMMM YYYY') }}
             </span>
         </div>
