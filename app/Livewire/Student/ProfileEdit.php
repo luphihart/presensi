@@ -14,8 +14,9 @@ class ProfileEdit extends Component
 {
     use WithFileUploads;
 
-    #[Validate('required|string|max:150')]
+    // Name is read-only — managed by Admin only
     public string $name = '';
+
 
     #[Validate('nullable|string|max:20')]
     public string $phone = '';
@@ -51,7 +52,6 @@ class ProfileEdit extends Component
         $student = $user->student;
 
         $user->update([
-            'name' => $this->name,
             'theme_preference' => $this->themePreference,
         ]);
 
