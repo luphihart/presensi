@@ -28,7 +28,7 @@
     </div>
 
     <!-- Live Attendance GPS Map Card -->
-    {{-- Pass map data to JS via hidden element to avoid @js inside blade component attribute --}}
+    {{-- Pass map data to JS safely via @json in its own script tag --}}
     <script>
         window.__mapConfig = @json([
             'schoolLat'    => $schoolLocation?->latitude ?? -6.200000,
@@ -73,6 +73,7 @@
         </div>
     </div>
 
+    @verbatim
     <script>
         function attendanceMap() {
             return {
@@ -168,6 +169,7 @@
             window.dispatchEvent(new CustomEvent('open-map-photo', { detail: { url: url, title: title } }));
         };
     </script>
+    @endverbatim
 
     <!-- Quick Leave Approval Box -->
     <x-ui.card class="space-y-4">
