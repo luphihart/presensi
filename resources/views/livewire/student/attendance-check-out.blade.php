@@ -49,8 +49,20 @@
             </div>
         </div>
 
+        @if($checkOutTime)
+            <div class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center space-x-3">
+                    <span class="text-xl">🕒</span>
+                    <div>
+                        <p class="text-xs font-semibold text-amber-900 dark:text-amber-200">Jadwal Jam Pulang Hari Ini</p>
+                        <p class="text-xs text-amber-700 dark:text-amber-300">Resmi dibuka pada pukul <strong>{{ $checkOutTime }} WIB</strong></p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if($errorMessage)
-            <div class="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-sm">
+            <div class="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-sm font-medium">
                 {{ $errorMessage }}
             </div>
         @endif

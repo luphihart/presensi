@@ -4,6 +4,8 @@ namespace App\Livewire\Student;
 
 use App\Jobs\ProcessAttendancePhoto;
 use App\Models\Attendance;
+use App\Models\Schedule;
+use App\Models\SchoolYear;
 use App\Services\GeofenceService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +22,7 @@ class AttendanceCheckOut extends Component
     public ?string $photoData = null;
     public ?string $errorMessage = null;
     public ?string $successMessage = null;
+    public ?string $checkOutTime = null;
 
     public function setLocation(float $lat, float $lng, GeofenceService $geofenceService): void
     {
@@ -49,7 +52,8 @@ class AttendanceCheckOut extends Component
     private function checkSchoolDay(): bool
     {
         $today = Carbon::today();
-        $schoolYear = \App\Models\SchoolYear::getActive();
+        $now = Carbon::now();
+        $schoolYear = SchoolYear::getActive();
 
         $holiday = \App\Models\Holiday::whereDate('date', $today->toDateString())
             ->first();
@@ -59,13 +63,23 @@ class AttendanceCheckOut extends Component
             return false;
         }
 
-        $schedule = \App\Models\Schedule::where('school_year_id', $schoolYear?->id)
+        $schedule = Schedule::where('school_year_id', $schoolYear?->id)
             ->where('day_of_week', $today->dayOfWeek)
             ->first();
 
         if ($schedule && !$schedule->is_school_day) {
             $this->errorMessage = 'Hari ini bukan hari sekolah / libur. Presensi tidak dapat dilakukan.';
             return false;
+        }
+
+        if ($schedule && !empty($schedule->check_out_time)) {
+            $checkOutStartTime = Carbon::parse($today->toDateString() . ' ' . $schedule->check_out_time);
+            $this->checkOutTime = $checkOutStartTime->format('H:i');
+
+            if ($now->lt($checkOutStartTime)) {
+                $this->errorMessage = 'Presensi pulang belum dibuka. Jam pulang sekolah hari ini adalah pukul ' . $this->checkOutTime . ' WIB.';
+                return false;
+            }
         }
 
         return true;
