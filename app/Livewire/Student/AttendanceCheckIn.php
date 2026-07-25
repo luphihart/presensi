@@ -2,12 +2,12 @@
 
 namespace App\Livewire\Student;
 
-use App\Jobs\ProcessAttendancePhoto;
 use App\Models\Attendance;
 use App\Models\Schedule;
 use App\Models\SchoolYear;
 use App\Services\AttendanceStatusService;
 use App\Services\GeofenceService;
+use App\Services\ImageCompressionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -74,7 +74,7 @@ class AttendanceCheckIn extends Component
         return true;
     }
 
-    public function submitCheckIn(AttendanceStatusService $statusService, GeofenceService $geofenceService): void
+    public function submitCheckIn(AttendanceStatusService $statusService, GeofenceService $geofenceService, ImageCompressionService $compressionService): void
     {
         if (!$this->checkSchoolDay()) {
             return;
@@ -121,6 +121,9 @@ class AttendanceCheckIn extends Component
 
         $status = $schedule ? $statusService->determineStatus($now, $schedule) : \App\Enums\AttendanceStatus::Hadir;
 
+        // Compress and save photo synchronously
+        $photoPath = $compressionService->compressBase64($this->photoData, 'attendance-photos');
+
         $attendance = Attendance::updateOrCreate(
             ['student_id' => $student->id, 'date' => $today->toDateString()],
             [
@@ -129,12 +132,10 @@ class AttendanceCheckIn extends Component
                 'check_in_latitude' => $this->latitude,
                 'check_in_longitude' => $this->longitude,
                 'check_in_distance_meters' => $this->distanceMeters,
+                'check_in_photo_path' => $photoPath,
                 'status' => $status,
             ]
         );
-
-        // Dispatch async photo processing job
-        dispatch(new ProcessAttendancePhoto($attendance->id, $this->photoData, 'check_in'));
 
         $this->successMessage = 'Presensi masuk berhasil tercatat jam ' . $now->format('H:i') . ' WIB (' . $status->label() . ')';
     }

@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-6" x-data="{ previewPhotoUrl: null, previewPhotoTitle: '' }">
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
@@ -67,8 +67,8 @@
             </div>
         @elseif($todayAttendance->check_in_at && !$todayAttendance->check_out_at)
             <!-- State 2: Sudah Masuk, Belum Pulang -->
-            <div class="py-4">
-                <div class="flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 mb-4">
+            <div class="py-4 space-y-4">
+                <div class="flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold">✓</div>
                         <div>
@@ -76,6 +76,12 @@
                             <div class="mt-0.5"><x-ui.badge :type="strtolower($todayAttendance->status->value)" :value="$todayAttendance->status->label()" /></div>
                         </div>
                     </div>
+
+                    @if($todayAttendance->check_in_photo_path)
+                        <button type="button" @click="previewPhotoUrl = '{{ asset('storage/' . $todayAttendance->check_in_photo_path) }}'; previewPhotoTitle = 'Foto Presensi Masuk Hari Ini'" class="w-12 h-12 rounded-xl overflow-hidden block border border-emerald-300 dark:border-emerald-700 shadow-sm hover:scale-105 transition-all shrink-0">
+                            <img src="{{ asset('storage/' . $todayAttendance->check_in_photo_path) }}" class="w-full h-full object-cover">
+                        </button>
+                    @endif
                 </div>
 
                 <a href="{{ route('student.attendance.check-out') }}" class="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-amber-500 text-white font-semibold text-base shadow-lg shadow-amber-500/30 hover:opacity-95 transition-all">
@@ -85,13 +91,36 @@
             </div>
         @else
             <!-- State 3: Presensi Lengkap Hari Ini -->
-            <div class="text-center py-6">
+            <div class="text-center py-6 space-y-4">
                 <div class="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mx-auto mb-3">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                 </div>
-                <h3 class="text-lg font-bold text-[var(--color-text)]">Presensi Lengkap</h3>
-                <p class="text-xs text-[var(--color-text-muted)] mt-1">Masuk: {{ $todayAttendance->check_in_at?->format('H:i') }} WIB • Pulang: {{ $todayAttendance->check_out_at?->format('H:i') }} WIB</p>
-                <div class="mt-3"><x-ui.badge :type="strtolower($todayAttendance->status->value)" :value="$todayAttendance->status->label()" /></div>
+                <div>
+                    <h3 class="text-lg font-bold text-[var(--color-text)]">Presensi Lengkap</h3>
+                    <p class="text-xs text-[var(--color-text-muted)] mt-1">Masuk: {{ $todayAttendance->check_in_at?->format('H:i') }} WIB • Pulang: {{ $todayAttendance->check_out_at?->format('H:i') }} WIB</p>
+                    <div class="mt-2"><x-ui.badge :type="strtolower($todayAttendance->status->value)" :value="$todayAttendance->status->label()" /></div>
+                </div>
+
+                <!-- Photos Grid -->
+                <div class="flex items-center justify-center space-x-4 pt-2">
+                    @if($todayAttendance->check_in_photo_path)
+                        <div class="text-center">
+                            <span class="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase block mb-1">Foto Masuk</span>
+                            <button type="button" @click="previewPhotoUrl = '{{ asset('storage/' . $todayAttendance->check_in_photo_path) }}'; previewPhotoTitle = 'Foto Presensi Masuk Hari Ini'" class="w-14 h-14 rounded-2xl overflow-hidden block border border-[var(--color-border)] shadow-sm hover:scale-105 transition-all">
+                                <img src="{{ asset('storage/' . $todayAttendance->check_in_photo_path) }}" class="w-full h-full object-cover">
+                            </button>
+                        </div>
+                    @endif
+
+                    @if($todayAttendance->check_out_photo_path)
+                        <div class="text-center">
+                            <span class="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase block mb-1">Foto Pulang</span>
+                            <button type="button" @click="previewPhotoUrl = '{{ asset('storage/' . $todayAttendance->check_out_photo_path) }}'; previewPhotoTitle = 'Foto Presensi Pulang Hari Ini'" class="w-14 h-14 rounded-2xl overflow-hidden block border border-[var(--color-border)] shadow-sm hover:scale-105 transition-all">
+                                <img src="{{ asset('storage/' . $todayAttendance->check_out_photo_path) }}" class="w-full h-full object-cover">
+                            </button>
+                        </div>
+                    @endif
+                </div>
             </div>
         @endif
     </x-ui.card>
@@ -135,4 +164,30 @@
             <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Kalender presensi</p>
         </a>
     </div>
+
+    <!-- Photo Preview Pop-up Modal -->
+    <template x-if="previewPhotoUrl">
+        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
+            @keydown.escape.window="previewPhotoUrl = null"
+            @click.self="previewPhotoUrl = null">
+            <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-5 max-w-md w-full shadow-2xl space-y-4 relative animate-in fade-in zoom-in duration-200">
+                <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
+                    <h3 class="font-bold text-sm text-[var(--color-text)]" x-text="previewPhotoTitle"></h3>
+                    <button @click="previewPhotoUrl = null" type="button" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-[var(--color-text)] flex items-center justify-center font-bold text-sm">
+                        ✕
+                    </button>
+                </div>
+
+                <div class="w-full aspect-[3/4] max-h-[65vh] rounded-2xl bg-slate-900 overflow-hidden flex items-center justify-center shadow-inner">
+                    <img :src="previewPhotoUrl" class="w-full h-full object-contain">
+                </div>
+
+                <div class="text-center">
+                    <button @click="previewPhotoUrl = null" type="button" class="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-semibold text-xs shadow-md">
+                        Tutup Pratinjau
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
 </div>

@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-6" x-data="{ previewPhotoUrl: null, previewPhotoTitle: '' }">
     <div class="flex items-center justify-between">
         <div>
             <h2 class="text-2xl font-bold text-[var(--color-text)]">Manajemen Presensi Harian</h2>
@@ -62,13 +62,29 @@
                             <td class="px-6 py-4 font-mono">{{ $item->check_in_at ? $item->check_in_at->format('H:i') . ' WIB' : '-' }}</td>
                             <td class="px-6 py-4 font-mono">{{ $item->check_out_at ? $item->check_out_at->format('H:i') . ' WIB' : '-' }}</td>
                             <td class="px-6 py-4">
-                                @if($item->check_in_photo_path)
-                                    <a href="{{ asset('storage/' . $item->check_in_photo_path) }}" target="_blank" class="w-10 h-10 rounded-lg overflow-hidden block border border-[var(--color-border)]">
-                                        <img src="{{ asset('storage/' . $item->check_in_photo_path) }}" class="w-full h-full object-cover">
-                                    </a>
-                                @else
-                                    <span class="text-[var(--color-text-muted)]">-</span>
-                                @endif
+                                <div class="flex items-center space-x-2">
+                                    @if($item->check_in_photo_path)
+                                        <div class="text-center group">
+                                            <button type="button" @click="previewPhotoUrl = '{{ asset('storage/' . $item->check_in_photo_path) }}'; previewPhotoTitle = 'Foto Presensi Masuk - {{ addslashes($item->student->user->name) }} ({{ $item->check_in_at?->format('H:i') }} WIB)'" class="w-10 h-10 rounded-xl overflow-hidden block border border-[var(--color-border)] shadow-sm hover:scale-105 transition-all">
+                                                <img src="{{ asset('storage/' . $item->check_in_photo_path) }}" class="w-full h-full object-cover">
+                                            </button>
+                                            <span class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 block mt-0.5">Masuk</span>
+                                        </div>
+                                    @endif
+
+                                    @if($item->check_out_photo_path)
+                                        <div class="text-center group">
+                                            <button type="button" @click="previewPhotoUrl = '{{ asset('storage/' . $item->check_out_photo_path) }}'; previewPhotoTitle = 'Foto Presensi Pulang - {{ addslashes($item->student->user->name) }} ({{ $item->check_out_at?->format('H:i') }} WIB)'" class="w-10 h-10 rounded-xl overflow-hidden block border border-[var(--color-border)] shadow-sm hover:scale-105 transition-all">
+                                                <img src="{{ asset('storage/' . $item->check_out_photo_path) }}" class="w-full h-full object-cover">
+                                            </button>
+                                            <span class="text-[9px] font-semibold text-amber-600 dark:text-amber-400 block mt-0.5">Pulang</span>
+                                        </div>
+                                    @endif
+
+                                    @if(!$item->check_in_photo_path && !$item->check_out_photo_path)
+                                        <span class="text-[var(--color-text-muted)]">-</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-6 py-4">
                                 <x-ui.badge :type="strtolower($item->status->value)" :value="$item->status->label()" />
@@ -99,6 +115,32 @@
             {{ $attendances->links() }}
         </div>
     </div>
+
+    <!-- Photo Preview Pop-up Modal -->
+    <template x-if="previewPhotoUrl">
+        <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
+            @keydown.escape.window="previewPhotoUrl = null"
+            @click.self="previewPhotoUrl = null">
+            <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-5 max-w-md w-full shadow-2xl space-y-4 relative animate-in fade-in zoom-in duration-200">
+                <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
+                    <h3 class="font-bold text-sm text-[var(--color-text)]" x-text="previewPhotoTitle"></h3>
+                    <button @click="previewPhotoUrl = null" type="button" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-[var(--color-text)] flex items-center justify-center font-bold text-sm">
+                        ✕
+                    </button>
+                </div>
+
+                <div class="w-full aspect-[3/4] max-h-[65vh] rounded-2xl bg-slate-900 overflow-hidden flex items-center justify-center shadow-inner">
+                    <img :src="previewPhotoUrl" class="w-full h-full object-contain">
+                </div>
+
+                <div class="text-center">
+                    <button @click="previewPhotoUrl = null" type="button" class="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-semibold text-xs shadow-md">
+                        Tutup Pratinjau
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <!-- Correction Modal -->
     @if($showCorrectionModal)

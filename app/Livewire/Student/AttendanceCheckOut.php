@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Student;
 
-use App\Jobs\ProcessAttendancePhoto;
 use App\Models\Attendance;
 use App\Models\Schedule;
 use App\Models\SchoolYear;
 use App\Services\GeofenceService;
+use App\Services\ImageCompressionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -85,7 +85,7 @@ class AttendanceCheckOut extends Component
         return true;
     }
 
-    public function submitCheckOut(GeofenceService $geofenceService): void
+    public function submitCheckOut(GeofenceService $geofenceService, ImageCompressionService $compressionService): void
     {
         if (!$this->checkSchoolDay()) {
             return;
@@ -120,14 +120,16 @@ class AttendanceCheckOut extends Component
             return;
         }
 
+        // Compress and save photo synchronously
+        $photoPath = $compressionService->compressBase64($this->photoData, 'attendance-photos');
+
         $attendance->update([
             'check_out_at' => $now,
             'check_out_latitude' => $this->latitude,
             'check_out_longitude' => $this->longitude,
             'check_out_distance_meters' => $this->distanceMeters,
+            'check_out_photo_path' => $photoPath,
         ]);
-
-        dispatch(new ProcessAttendancePhoto($attendance->id, $this->photoData, 'check_out'));
 
         $this->successMessage = 'Presensi pulang berhasil tercatat jam ' . $now->format('H:i') . ' WIB';
     }
