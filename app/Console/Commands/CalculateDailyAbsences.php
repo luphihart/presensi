@@ -78,6 +78,14 @@ class CalculateDailyAbsences extends Command
                 ]
             );
 
+            // Send notification to student
+            \App\Models\Notification::create([
+                'user_id' => $student->user_id,
+                'type' => \App\Enums\NotificationType::AbsenceReminder,
+                'title' => 'Pemberitahuan Ketidakhadiran ⚠️',
+                'body' => 'Anda ditandai Alpa (Tanpa Keterangan) untuk tanggal ' . $targetDate->locale('id')->isoFormat('D MMMM YYYY') . '.',
+            ]);
+
             $alpaCount++;
         }
 
