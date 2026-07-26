@@ -39,7 +39,7 @@
     <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
         <div class="p-4 border-b border-[var(--color-border)] flex items-center justify-between">
             <h3 class="font-bold text-sm text-[var(--color-text)]">
-                Pratinjau Matriks Presensi Bulan {{ \Carbon\Carbon::parse(($reportData['yearMonth'] ?? now()->format('Y-m')) . '-01')->isoFormat('MMMM YYYY') }}
+                Pratinjau Matriks Presensi Bulan {{ \Carbon\Carbon::parse(($reportData['yearMonth'] ?? now()->format('Y-m')) . '-01')->locale('id')->isoFormat('MMMM YYYY') }}
             </h3>
             <span class="text-xs text-[var(--color-text-muted)]">Geser ke kanan untuk melihat rincian tanggal ➔</span>
         </div>

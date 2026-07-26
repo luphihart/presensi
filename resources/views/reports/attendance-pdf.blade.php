@@ -125,7 +125,7 @@
 <body>
     <div class="header">
         <h1>{{ $title }}</h1>
-        <p>Bulan: {{ \Carbon\Carbon::parse($yearMonth . '-01')->isoFormat('MMMM YYYY') }} | Dicetak: {{ $generated_at }} WIB</p>
+        <p>Bulan: {{ \Carbon\Carbon::parse($yearMonth . '-01')->locale('id')->isoFormat('MMMM YYYY') }} | Dicetak: {{ $generated_at }} WIB</p>
     </div>
 
     <table>
@@ -213,7 +213,7 @@
         <tr>
             <td style="width: 70%;"></td>
             <td>
-                {{ config('app.name') }}, {{ now()->isoFormat('D MMMM YYYY') }}<br>
+                {{ config('app.name') }}, {{ now()->locale('id')->isoFormat('D MMMM YYYY') }}<br>
                 Kepala Sekolah / Admin Presensi,<br><br><br><br>
                 <strong>________________________</strong>
             </td>

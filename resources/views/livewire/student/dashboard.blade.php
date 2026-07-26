@@ -37,7 +37,7 @@
         <div class="flex items-center justify-between mb-4">
             <span class="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">Presensi Hari Ini</span>
             <span class="text-xs font-bold px-3 py-1 rounded-full bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-border)] shadow-xs">
-                {{ now()->isoFormat('D MMMM YYYY') }}
+                {{ now()->locale('id')->isoFormat('D MMMM YYYY') }}
             </span>
         </div>
 

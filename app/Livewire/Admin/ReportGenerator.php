@@ -26,7 +26,7 @@ class ReportGenerator extends Component
     {
         $reportData = $this->getReportMatrix();
         $selectedClass = $this->classFilter ? ClassRoom::find($this->classFilter)?->name : 'Semua Kelas';
-        $title = 'Rekap Presensi Murid - ' . $selectedClass . ' (' . Carbon::parse($this->month . '-01')->isoFormat('MMMM YYYY') . ')';
+        $title = 'Rekap Presensi Murid - ' . $selectedClass . ' (' . Carbon::parse($this->month . '-01')->locale('id')->isoFormat('MMMM YYYY') . ')';
 
         $fileName = 'rekap-presensi-' . str_replace(' ', '-', strtolower($selectedClass)) . '-' . $this->month . '.xlsx';
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\AttendanceMatrixExport($reportData, $title), $fileName);
@@ -35,7 +35,7 @@ class ReportGenerator extends Component
     public function getReportMatrix(): array
     {
         $yearMonth = !empty($this->month) ? $this->month : now()->format('Y-m');
-        $startOfMonth = Carbon::parse($yearMonth . '-01')->startOfMonth();
+        $startOfMonth = Carbon::parse($yearMonth . '-01')->locale('id')->startOfMonth();
         $endOfMonth = $startOfMonth->copy()->endOfMonth();
 
         // Build array of dates for the month
@@ -45,7 +45,7 @@ class ReportGenerator extends Component
             $days[$current->toDateString()] = [
                 'date' => $current->toDateString(),
                 'dayNumber' => $current->format('d'),
-                'dayName' => $current->isoFormat('dd'),
+                'dayName' => $current->locale('id')->isoFormat('ddd'),
                 'isWeekend' => $current->isWeekend(),
             ];
             $current->addDay();

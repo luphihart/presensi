@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <th colspan="{{ 10 + count($days) }}" style="text-align: center; color: #666666;">
-                Bulan: {{ \Carbon\Carbon::parse($yearMonth . '-01')->isoFormat('MMMM YYYY') }} | Dicetak: {{ $generated_at }} WIB
+                Bulan: {{ \Carbon\Carbon::parse($yearMonth . '-01')->locale('id')->isoFormat('MMMM YYYY') }} | Dicetak: {{ $generated_at }} WIB
             </th>
         </tr>
         <tr>

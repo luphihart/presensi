@@ -5,7 +5,7 @@
 
     <div>
         <h2 class="text-2xl font-bold text-[var(--color-text)]">Ringkasan Presensi Hari Ini</h2>
-        <p class="text-sm text-[var(--color-text-muted)]">{{ now()->isoFormat('D MMMM YYYY') }} • Total Murid Aktif: {{ $totalStudents }}</p>
+        <p class="text-sm text-[var(--color-text-muted)]">{{ now()->locale('id')->isoFormat('D MMMM YYYY') }} • Total Murid Aktif: {{ $totalStudents }}</p>
     </div>
 
     <!-- Stat Cards Grid -->

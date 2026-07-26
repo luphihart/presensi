@@ -10,7 +10,7 @@
             ←
         </button>
         <h3 class="text-base font-bold text-[var(--color-text)]">
-            {{ $date->isoFormat('MMMM YYYY') }}
+            {{ $date->locale('id')->isoFormat('MMMM YYYY') }}
         </h3>
         <button wire:click="nextMonth" @click="selectedDate = null; selectedInfo = null" type="button" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-[var(--color-text)] font-bold">
             →
@@ -40,7 +40,7 @@
                 @php
                     $currentDateObj = $date->copy()->day($d);
                     $currentDateStr = $currentDateObj->format('Y-m-d');
-                    $formattedDateLabel = $currentDateObj->isoFormat('D MMMM YYYY');
+                    $formattedDateLabel = $currentDateObj->locale('id')->isoFormat('D MMMM YYYY');
                     $att = $attendances[$currentDateStr] ?? null;
                     $holiday = $holidays[$currentDateStr] ?? null;
                     $isSunday = $currentDateObj->dayOfWeek === 0;
