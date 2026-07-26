@@ -70,7 +70,7 @@
                             default => 'bg-slate-400'
                         };
                     } elseif ($holiday || $isNonSchoolDay) {
-                        $statusLabel = $holiday ? $holiday->name : ($dayOfWeek === 0 ? 'Hari Minggu' : ($dayOfWeek === 6 ? 'Hari Sabtu (Libur)' : 'Hari Libur Sekolah'));
+                        $statusLabel = $holiday ? $holiday->name : ($dayOfWeek === 0 ? 'Hari Minggu' : ($dayOfWeek === 6 ? 'Hari Sabtu' : 'Hari Libur Sekolah'));
                         $statusType = 'holiday';
                         $dotClass = 'bg-rose-400';
                     }
