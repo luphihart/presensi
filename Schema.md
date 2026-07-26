@@ -10,22 +10,26 @@
 ## 1. Entity Relationship Diagram (ERD)
 
 ```
-users ──1:1── students ──N:1── class_rooms ──N:1── school_years
-                  │
-                  ├──1:N── attendances ──N:1── leave_requests
-                  ├──1:N── leave_requests
-                  └──1:N── notifications (polymorphic)
+users (1) ──1:1── (1) students (N) ──N:1── (1) class_rooms (N) ──N:1── (1) school_years
+  │                       │
+  │                       ├──1:N── attendances ──N:1── leave_requests
+  │                       ├──1:N── leave_requests
+  │                       └──1:N── notifications (polymorphic)
+  │
+  ├──1:N── audit_logs (as actor)
+  ├──1:N── sessions
+  └──1:1── password_reset_tokens
 
-school_years ──1:N── schedules
-school_years ──1:N── holidays
-school_years ──1:N── class_rooms
+school_years (1) ──1:N── (N) schedules
+school_years (1) ──1:N── (N) holidays
+school_years (1) ──1:N── (N) class_rooms
 
 settings (key-value global configuration)
 ```
 
 ---
 
-## 2. Rincian Skema Tabel
+## 2. Rincian Skema Tabel Utama
 
 ### 2.1 Tabel `users`
 Akun autentikasi untuk role `admin` dan `student`.
@@ -44,6 +48,7 @@ Akun autentikasi untuk role `admin` dan `student`.
 | `remember_token` | varchar(100) | Yes | NULL | Token sesi persistent |
 | `created_at` | timestamp | No | - | Timestamp dibuat |
 | `updated_at` | timestamp | No | - | Timestamp diperbarui |
+| `deleted_at` | timestamp | Yes | NULL | Soft delete timestamp |
 
 **Indeks:** `email` (Unique), `role`.
 
@@ -56,7 +61,7 @@ Data profil murid, terikat 1:1 dengan `users` dan N:1 dengan `class_rooms`.
 |---|---|---|---|---|
 | `id` | bigint (PK) | No | Auto | Primary Key |
 | `user_id` | bigint (FK) | No | - | Unique FK → `users.id` (On Delete Cascade) |
-| `class_room_id` | bigint (FK) | No | - | FK → `class_rooms.id` |
+| `class_room_id` | bigint (FK) | No | - | FK → `class_rooms.id` (On Delete Cascade) |
 | `nis` | varchar(30) | No | - | Unique Nomor Induk Siswa |
 | `phone` | varchar(20) | Yes | NULL | Nomor HP / WhatsApp murid |
 | `address` | text | Yes | NULL | Alamat tempat tinggal |
@@ -79,9 +84,9 @@ Kelas dan jurusan murid terikat pada tahun ajaran aktif.
 | Kolom | Tipe Data | Nullable | Default | Keterangan |
 |---|---|---|---|---|
 | `id` | bigint (PK) | No | Auto | Primary Key |
-| `school_year_id` | bigint (FK) | No | - | FK → `school_years.id` |
+| `school_year_id` | bigint (FK) | No | - | FK → `school_years.id` (On Delete Cascade) |
 | `name` | varchar(50) | No | - | Nama kelas (contoh: `X-D3`, `XI-IPA-1`) |
-| `major` | varchar(100) | Yes | NULL | Jurusan / Peminatan |
+| `major` | varchar(100) | Yes | NULL | Jurusan / Peminatan (contoh: `Teknik Komputer`) |
 | `deleted_at` | timestamp | Yes | NULL | Soft delete timestamp |
 | `created_at` | timestamp | No | - | Timestamp dibuat |
 | `updated_at` | timestamp | No | - | Timestamp diperbarui |
@@ -165,7 +170,7 @@ Catatan presensi harian murid.
 | Kolom | Tipe Data | Nullable | Default | Keterangan |
 |---|---|---|---|---|
 | `id` | bigint (PK) | No | Auto | Primary Key |
-| `student_id` | bigint (FK) | No | - | FK → `students.id` |
+| `student_id` | bigint (FK) | No | - | FK → `students.id` (On Delete Cascade) |
 | `school_year_id` | bigint (FK) | No | - | FK → `school_years.id` |
 | `date` | date | No | - | Tanggal presensi |
 | `check_in_at` | timestamp | Yes | NULL | Jam presensi masuk |
@@ -196,7 +201,7 @@ Pengajuan izin dan sakit murid.
 | Kolom | Tipe Data | Nullable | Default | Keterangan |
 |---|---|---|---|---|
 | `id` | bigint (PK) | No | Auto | Primary Key |
-| `student_id` | bigint (FK) | No | - | FK → `students.id` |
+| `student_id` | bigint (FK) | No | - | FK → `students.id` (On Delete Cascade) |
 | `type` | enum('izin','sakit') | No | - | Jenis pengajuan |
 | `date` | date | No | - | Tanggal izin/sakit yang diajukan |
 | `reason` | text | No | - | Alasan pengajuan |
@@ -245,3 +250,12 @@ Pengaturan konfigurasi global sekolah dan sistem (key-value).
 | `updated_at` | timestamp | No | - | Timestamp diperbarui |
 
 **Indeks:** `key` (Unique).
+
+---
+
+### 2.12 Tabel Audit & Infrastruktur Laravel
+- **`audit_logs`**: `id`, `actor_id`, `action`, `subject_type`, `subject_id`, `old_values`, `new_values`, `ip_address`, `created_at`.
+- **`sessions`**: `id` (PK), `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`.
+- **`password_reset_tokens`**: `email` (PK), `token`, `created_at`.
+- **`jobs`**: `id` (PK), `queue`, `payload`, `attempts`, `reserved_at`, `available_at`, `created_at`.
+- **`cache`**: `key` (PK), `value`, `expiration`.
