@@ -4,6 +4,7 @@ namespace App\Livewire\Student;
 
 use App\Models\Attendance;
 use App\Models\Holiday;
+use App\Models\Schedule;
 use App\Models\SchoolYear;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
