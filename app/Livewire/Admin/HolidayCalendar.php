@@ -12,6 +12,8 @@ use Livewire\Component;
 #[Layout('layouts.admin')]
 class HolidayCalendar extends Component
 {
+    public ?int $editingId = null;
+
     #[Validate('required|date')]
     public string $date = '';
 
@@ -28,12 +30,47 @@ class HolidayCalendar extends Component
         $this->date = now()->toDateString();
     }
 
+    public function editHoliday(int $id): void
+    {
+        $holiday = Holiday::find($id);
+        if (!$holiday) return;
+
+        $this->editingId = $holiday->id;
+        $this->date = $holiday->date->toDateString();
+        $this->name = $holiday->name;
+        $this->type = $holiday->type;
+        $this->resetValidation();
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->editingId = null;
+        $this->date = now()->toDateString();
+        $this->name = '';
+        $this->type = 'school';
+        $this->resetValidation();
+    }
+
     public function addHoliday(): void
     {
         $this->validate();
 
         $schoolYear = SchoolYear::getActive();
         if (!$schoolYear) return;
+
+        if ($this->editingId) {
+            $holiday = Holiday::find($this->editingId);
+            if ($holiday) {
+                $holiday->update([
+                    'date' => $this->date,
+                    'name' => $this->name,
+                    'type' => $this->type,
+                ]);
+                $this->successMessage = 'Hari libur berhasil diperbarui.';
+            }
+            $this->cancelEdit();
+            return;
+        }
 
         Holiday::updateOrCreate(
             ['school_year_id' => $schoolYear->id, 'date' => $this->date],
@@ -47,6 +84,10 @@ class HolidayCalendar extends Component
     public function deleteHoliday(int $id): void
     {
         Holiday::destroy($id);
+        if ($this->editingId === $id) {
+            $this->cancelEdit();
+        }
+        $this->successMessage = 'Hari libur berhasil dihapus.';
     }
 
     public function render()
