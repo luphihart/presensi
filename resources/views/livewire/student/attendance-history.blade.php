@@ -20,13 +20,13 @@
     <!-- Calendar Grid Card -->
     <x-ui.card>
         <div class="grid grid-cols-7 gap-1 text-center font-semibold text-xs text-[var(--color-text-muted)] mb-3">
-            <span class="text-rose-500">Min</span>
+            <span class="text-rose-500 font-bold">Min</span>
             <span>Sen</span>
             <span>Sel</span>
             <span>Rab</span>
             <span>Kam</span>
             <span>Jum</span>
-            <span>Sab</span>
+            <span class="{{ (isset($schedules[6]) && !$schedules[6]) || !isset($schedules[6]) ? 'text-rose-500 font-bold' : '' }}">Sab</span>
         </div>
 
         <div class="grid grid-cols-7 gap-1.5">
@@ -43,7 +43,8 @@
                     $formattedDateLabel = $currentDateObj->locale('id')->isoFormat('D MMMM YYYY');
                     $att = $attendances[$currentDateStr] ?? null;
                     $holiday = $holidays[$currentDateStr] ?? null;
-                    $isSunday = $currentDateObj->dayOfWeek === 0;
+                    $dayOfWeek = $currentDateObj->dayOfWeek; // 0=Sunday, 6=Saturday
+                    $isNonSchoolDay = isset($schedules[$dayOfWeek]) ? !$schedules[$dayOfWeek] : ($dayOfWeek === 0 || $dayOfWeek === 6);
 
                     $dotClass = null;
                     $statusLabel = null;
@@ -68,8 +69,8 @@
                             'alpa' => 'bg-rose-500',
                             default => 'bg-slate-400'
                         };
-                    } elseif ($holiday || $isSunday) {
-                        $statusLabel = $holiday ? $holiday->name : 'Hari Minggu / Libur';
+                    } elseif ($holiday || $isNonSchoolDay) {
+                        $statusLabel = $holiday ? $holiday->name : ($dayOfWeek === 0 ? 'Hari Minggu' : ($dayOfWeek === 6 ? 'Hari Sabtu (Libur)' : 'Hari Libur Sekolah'));
                         $statusType = 'holiday';
                         $dotClass = 'bg-rose-400';
                     }
@@ -88,7 +89,7 @@
                     :class="selectedDate === '{{ $currentDateStr }}' ? 'ring-2 ring-[var(--color-primary)] shadow-md scale-105' : ''"
                     class="aspect-square rounded-2xl flex flex-col items-center justify-center text-xs p-1 relative border transition-all hover:scale-105 border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)]">
                     
-                    <span class="font-semibold {{ $isSunday || $holiday ? 'text-rose-500 font-bold' : '' }}">{{ $d }}</span>
+                    <span class="font-semibold {{ $isNonSchoolDay || $holiday ? 'text-rose-500 font-bold' : '' }}">{{ $d }}</span>
                     
                     @if($dotClass)
                         <span class="w-2 h-2 rounded-full mt-1 {{ $dotClass }}"></span>

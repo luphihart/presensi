@@ -49,6 +49,10 @@ class AttendanceHistory extends Component
             ->get()
             ->keyBy(fn($item) => $item->date->format('Y-m-d'));
 
+        $schedules = Schedule::where('school_year_id', $schoolYear?->id)
+            ->pluck('is_school_day', 'day_of_week')
+            ->toArray();
+
         // Generate grid days for the month
         $daysInMonth = $date->daysInMonth;
         $startDayOfWeek = $startOfMonth->dayOfWeek; // 0=Sunday
@@ -59,6 +63,7 @@ class AttendanceHistory extends Component
             'startDayOfWeek' => $startDayOfWeek,
             'attendances' => $attendances,
             'holidays' => $holidays,
+            'schedules' => $schedules,
         ]);
     }
 }
