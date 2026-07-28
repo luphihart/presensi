@@ -5,7 +5,7 @@
             <p class="text-sm text-[var(--color-text-muted)]">Kelola akun dan data identitas murid seluruh kelas</p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex flex-wrap items-center" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
             <button wire:click="recalculateAllStreaks" wire:confirm="Hitung ulang streak untuk seluruh murid aktif?" type="button" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold shadow-md flex items-center space-x-1.5 transition-all">
                 <span>🔥 Recalculate Streak All</span>
             </button>
