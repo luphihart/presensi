@@ -5,15 +5,15 @@
             <p class="text-sm text-[var(--color-text-muted)]">Kelola akun dan data identitas murid seluruh kelas</p>
         </div>
 
-        <div class="flex items-center space-x-2.5">
-            <button wire:click="recalculateAllStreaks" wire:confirm="Hitung ulang streak untuk seluruh murid aktif?" type="button" class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-all">
+        <div class="flex flex-wrap items-center gap-2.5">
+            <button wire:click="recalculateAllStreaks" wire:confirm="Hitung ulang streak untuk seluruh murid aktif?" type="button" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold shadow-md flex items-center space-x-1.5 transition-all">
                 <span>🔥 Recalculate Streak All</span>
             </button>
-            <a href="{{ route('admin.students.import') }}" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-sm flex items-center space-x-1.5">
+            <a href="{{ route('admin.students.import') }}" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-md flex items-center space-x-1.5 transition-all">
                 <span>📥 Import Excel</span>
             </a>
-            <button wire:click="openCreate" type="button" class="px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white text-sm font-semibold shadow-md">
-                + Tambah Murid
+            <button wire:click="openCreate" type="button" class="px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white text-sm font-semibold shadow-md flex items-center space-x-1.5 transition-all">
+                <span>+ Tambah Murid</span>
             </button>
         </div>
     </div>
