@@ -165,6 +165,35 @@
         </a>
     </div>
 
+    <!-- Announcements Section (Tampil di bawah shortcut) -->
+    @if(count($announcements) > 0)
+        <x-ui.card class="space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg">📢</span>
+                    <h3 class="text-sm font-semibold text-[var(--color-text)]">Pengumuman Sekolah</h3>
+                </div>
+                <a href="{{ route('student.announcements') }}" class="text-xs font-semibold text-[var(--color-primary)] hover:underline">
+                    Lihat Semua →
+                </a>
+            </div>
+
+            <div class="space-y-2.5">
+                @foreach($announcements as $announcement)
+                    <div class="p-3.5 rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)] space-y-1">
+                        <div class="flex items-center justify-between gap-2">
+                            <h4 class="font-bold text-xs text-[var(--color-text)] line-clamp-1">{{ $announcement->title }}</h4>
+                            <span class="text-[10px] text-[var(--color-text-muted)] shrink-0">
+                                {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMM YYYY') : '' }}
+                            </span>
+                        </div>
+                        <p class="text-xs text-[var(--color-text-muted)] line-clamp-2 leading-relaxed">{{ $announcement->content }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </x-ui.card>
+    @endif
+
     <!-- Photo Preview Pop-up Modal -->
     <template x-if="previewPhotoUrl">
         <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"
