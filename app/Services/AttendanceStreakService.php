@@ -34,40 +34,66 @@ class AttendanceStreakService
     public function recalculateStreak(Student $student): array
     {
         $schoolYear = SchoolYear::getActive();
-        if (!$schoolYear) {
-            return ['current' => 0, 'longest' => 0];
+
+        $today = Carbon::today();
+
+        // Fetch holidays (only if school year exists)
+        $holidays = [];
+        $schedules = [];
+        $schoolYearStart = null;
+
+        if ($schoolYear) {
+            $holidays = Holiday::where('school_year_id', $schoolYear->id)
+                ->pluck('date')
+                ->map(fn($d) => Carbon::parse($d)->toDateString())
+                ->toArray();
+
+            $schedules = Schedule::where('school_year_id', $schoolYear->id)
+                ->pluck('is_school_day', 'day_of_week')
+                ->toArray();
+
+            // Cap startDate to school year start so old data from previous years
+            // does not create massive gaps of implicit 'Alpa'
+            $schoolYearStart = Carbon::parse($schoolYear->start_date);
         }
 
-        // Determine start date from earliest attendance/leave or today
-        $earliestAtt = Attendance::where('student_id', $student->id)->min('date');
-        $earliestLeave = LeaveRequest::where('student_id', $student->id)->min('date');
+        // Determine start date: earliest attendance/leave within this school year
+        $attQuery = Attendance::where('student_id', $student->id);
+        $leaveQuery = LeaveRequest::where('student_id', $student->id);
+
+        if ($schoolYearStart) {
+            $attQuery->whereDate('date', '>=', $schoolYearStart->toDateString());
+            $leaveQuery->whereDate('date', '>=', $schoolYearStart->toDateString());
+        }
+
+        $earliestAtt   = $attQuery->min('date');
+        $earliestLeave = $leaveQuery->min('date');
 
         $dates = array_filter([$earliestAtt, $earliestLeave]);
         if (!empty($dates)) {
             $startDate = Carbon::parse(min($dates));
         } else {
-            $startDate = Carbon::today();
+            // No records yet — nothing to calculate, preserve current value
+            return [
+                'current' => (int)($student->current_streak ?? 0),
+                'longest' => (int)($student->longest_streak ?? 0),
+            ];
         }
 
-        $today = Carbon::today();
+        // Cap to school year start if applicable
+        if ($schoolYearStart && $startDate->lt($schoolYearStart)) {
+            $startDate = $schoolYearStart->copy();
+        }
 
         if ($startDate->isAfter($today)) {
-            $student->update(['current_streak' => 0, 'longest_streak' => 0]);
-            return ['current' => 0, 'longest' => 0];
+            // Start date is in the future — preserve existing streak, do not reset
+            return [
+                'current' => (int)($student->current_streak ?? 0),
+                'longest' => (int)($student->longest_streak ?? 0),
+            ];
         }
 
-        // Fetch holidays for active school year
-        $holidays = Holiday::where('school_year_id', $schoolYear->id)
-            ->pluck('date')
-            ->map(fn($d) => Carbon::parse($d)->toDateString())
-            ->toArray();
-
-        // Fetch weekly schedules
-        $schedules = Schedule::where('school_year_id', $schoolYear->id)
-            ->pluck('is_school_day', 'day_of_week')
-            ->toArray();
-
-        // Fetch all attendances for student
+        // Fetch attendances within range
         $attendances = Attendance::where('student_id', $student->id)
             ->whereDate('date', '>=', $startDate->toDateString())
             ->whereDate('date', '<=', $today->toDateString())
@@ -95,10 +121,12 @@ class AttendanceStreakService
         $schoolDays = [];
         $cursor = $startDate->copy();
         while ($cursor->lte($today)) {
-            $dateStr = $cursor->toDateString();
+            $dateStr   = $cursor->toDateString();
             $dayOfWeek = $cursor->dayOfWeek; // 0 = Sunday
 
-            $isSchoolDay = isset($schedules[$dayOfWeek]) ? (bool)$schedules[$dayOfWeek] : ($dayOfWeek >= 1 && $dayOfWeek <= 5);
+            $isSchoolDay = isset($schedules[$dayOfWeek])
+                ? (bool)$schedules[$dayOfWeek]
+                : ($dayOfWeek >= 1 && $dayOfWeek <= 5);
             $isHoliday = in_array($dateStr, $holidays, true);
 
             if ($isSchoolDay && !$isHoliday) {
@@ -108,8 +136,11 @@ class AttendanceStreakService
         }
 
         if (empty($schoolDays)) {
-            $student->update(['current_streak' => 0, 'longest_streak' => 0]);
-            return ['current' => 0, 'longest' => 0];
+            // No school days in the calculated range — preserve existing value, do NOT reset
+            return [
+                'current' => (int)($student->current_streak ?? 0),
+                'longest' => (int)($student->longest_streak ?? 0),
+            ];
         }
 
         // Now calculate streaks chronologically
