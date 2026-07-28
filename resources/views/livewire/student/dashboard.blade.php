@@ -190,7 +190,7 @@
                 @endphp
                 <div class="space-y-1.5 pt-1">
                     <div class="flex justify-between text-[11px] font-semibold text-[var(--color-text-muted)]">
-                        <span>Progress Milestone Next</span>
+                        <span>Target Berikutnya</span>
                         <span class="text-[var(--color-primary)] font-bold">{{ $remaining }} hari lagi → {{ $nextMilestone['icon'] }} {{ $nextMilestone['name'] }}</span>
                     </div>
                     <div class="w-full h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden p-0.5 border border-slate-300/50 dark:border-slate-600/50">
