@@ -167,31 +167,47 @@
 
     <!-- Announcements Section (Tampil di bawah shortcut) -->
     @if(count($announcements) > 0)
-        <x-ui.card class="space-y-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <span class="text-lg">📢</span>
-                    <h3 class="text-sm font-semibold text-[var(--color-text)]">Pengumuman Sekolah</h3>
+        <div class="rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm">
+            <!-- Header dengan gradient -->
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.761 1.761 0 013 12c0-.663.364-1.24.908-1.543l3.526-1.958"/>
+                    </svg>
                 </div>
-                <a href="{{ route('student.announcements') }}" class="text-xs font-semibold text-[var(--color-primary)] hover:underline">
-                    Lihat Semua →
-                </a>
+                <h3 class="text-sm font-bold text-white tracking-wide">Pengumuman Sekolah</h3>
             </div>
 
-            <div class="space-y-2.5">
+            <!-- Daftar pengumuman -->
+            <div class="bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
                 @foreach($announcements as $announcement)
-                    <div class="p-3.5 rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)] space-y-1">
-                        <div class="flex items-center justify-between gap-2">
-                            <h4 class="font-bold text-xs text-[var(--color-text)] line-clamp-1">{{ $announcement->title }}</h4>
-                            <span class="text-[10px] text-[var(--color-text-muted)] shrink-0">
-                                {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMM YYYY') : '' }}
+                    <div class="px-4 py-3.5 space-y-2">
+                        <!-- Judul + badge tanggal -->
+                        <div class="flex items-start justify-between gap-2">
+                            <h4 class="font-bold text-sm text-[var(--color-text)] leading-snug line-clamp-2 flex-1">
+                                {{ $announcement->title }}
+                            </h4>
+                            <span class="shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900 mt-0.5">
+                                {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMM') : '' }}
                             </span>
                         </div>
-                        <p class="text-xs text-[var(--color-text-muted)] line-clamp-2 leading-relaxed">{{ $announcement->content }}</p>
+                        <!-- Preview isi -->
+                        <p class="text-xs text-[var(--color-text-muted)] line-clamp-3 leading-relaxed">
+                            {{ $announcement->content }}
+                        </p>
                     </div>
                 @endforeach
             </div>
-        </x-ui.card>
+
+            <!-- Tombol Baca Selengkapnya di bawah -->
+            <a href="{{ route('student.announcements') }}"
+               class="flex items-center justify-center gap-1.5 w-full py-3 bg-[var(--color-bg)] border-t border-[var(--color-border)] text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors">
+                Baca Selengkapnya
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
     @endif
 
     <!-- Photo Preview Pop-up Modal -->
