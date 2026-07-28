@@ -98,7 +98,7 @@ class AnnouncementManagementTest extends TestCase
             ->assertDontSee('Draft Pengumuman');
     }
 
-    public function test_published_announcement_shown_in_student_dashboard(): void
+    public function test_published_announcement_shown_in_student_announcement_list(): void
     {
         $admin = User::factory()->create(['role' => UserRole::Admin]);
 
@@ -113,7 +113,7 @@ class AnnouncementManagementTest extends TestCase
         $studentUser = User::factory()->create(['role' => UserRole::Student]);
 
         Livewire::actingAs($studentUser)
-            ->test(\App\Livewire\Student\Dashboard::class)
+            ->test(\App\Livewire\Student\AnnouncementList::class)
             ->assertSee('Pengumuman Ujian');
     }
 }

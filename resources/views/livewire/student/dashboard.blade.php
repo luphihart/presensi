@@ -146,35 +146,6 @@
         </div>
     </x-ui.card>
 
-    <!-- Announcements Section -->
-    @if(count($announcements) > 0)
-        <x-ui.card class="space-y-3">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <span class="text-lg">📢</span>
-                    <h3 class="text-sm font-semibold text-[var(--color-text)]">Pengumuman Sekolah</h3>
-                </div>
-                <a href="{{ route('student.announcements') }}" class="text-xs font-semibold text-[var(--color-primary)] hover:underline">
-                    Lihat Semua →
-                </a>
-            </div>
-
-            <div class="space-y-2.5">
-                @foreach($announcements as $announcement)
-                    <div class="p-3.5 rounded-xl bg-[var(--color-bg)] border border-[var(--color-border)] space-y-1">
-                        <div class="flex items-center justify-between gap-2">
-                            <h4 class="font-bold text-xs text-[var(--color-text)] line-clamp-1">{{ $announcement->title }}</h4>
-                            <span class="text-[10px] text-[var(--color-text-muted)] shrink-0">
-                                {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMM YYYY') : '' }}
-                            </span>
-                        </div>
-                        <p class="text-xs text-[var(--color-text-muted)] line-clamp-2 leading-relaxed">{{ $announcement->content }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </x-ui.card>
-    @endif
-
     <!-- Quick Shortcuts -->
     <div class="grid grid-cols-2 gap-4">
         <a href="{{ route('student.leave.index') }}" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center hover:border-[var(--color-primary)] transition-all shadow-sm">
