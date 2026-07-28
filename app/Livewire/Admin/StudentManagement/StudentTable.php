@@ -41,6 +41,8 @@ class StudentTable extends Component
     public string $classRoomId = '';
     public string $gender = 'L';
     public string $birthDate = '';
+    public string $phone = '';
+    public string $address = '';
     public ?string $successMessage = null;
 
     public function updatingSearch(): void
@@ -111,7 +113,7 @@ class StudentTable extends Component
 
     public function openCreate(): void
     {
-        $this->reset(['studentId', 'name', 'email', 'password', 'nis', 'classRoomId', 'gender', 'birthDate']);
+        $this->reset(['studentId', 'name', 'email', 'password', 'nis', 'classRoomId', 'gender', 'birthDate', 'phone', 'address']);
         $this->gender = 'L';
         $this->showFormModal = true;
     }
@@ -128,6 +130,8 @@ class StudentTable extends Component
             $this->classRoomId = (string)$student->class_room_id;
             $this->gender = $student->gender;
             $this->birthDate = $student->birth_date ? $student->birth_date->format('Y-m-d') : '';
+            $this->phone = $student->phone ?? '';
+            $this->address = $student->address ?? '';
             $this->showFormModal = true;
         }
     }
