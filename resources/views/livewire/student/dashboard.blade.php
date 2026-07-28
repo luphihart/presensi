@@ -168,40 +168,44 @@
     <!-- Announcements Section (Tampil di bawah shortcut) -->
     @if(count($announcements) > 0)
         <div class="rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm">
-            <!-- Header dengan gradient -->
-            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3 flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Header dengan gradient (inline style untuk kompatibilitas) -->
+            <div style="background: linear-gradient(to right, #6366f1, #a855f7);" class="px-4 py-3 flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: rgba(255,255,255,0.2);">
+                    <svg class="w-4 h-4" fill="none" stroke="white" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.761 1.761 0 013 12c0-.663.364-1.24.908-1.543l3.526-1.958"/>
                     </svg>
                 </div>
-                <h3 class="text-sm font-bold text-white tracking-wide">Pengumuman Sekolah</h3>
+                <h3 style="color: white; font-weight: 700; font-size: 0.875rem; letter-spacing: 0.025em;">Pengumuman Sekolah</h3>
             </div>
 
             <!-- Daftar pengumuman -->
             <div class="bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
                 @foreach($announcements as $announcement)
-                    <div class="px-4 py-3.5 space-y-2">
+                    <div class="px-4 py-3.5 space-y-1.5">
                         <!-- Judul + badge tanggal -->
                         <div class="flex items-start justify-between gap-2">
-                            <h4 class="font-bold text-sm text-[var(--color-text)] leading-snug line-clamp-2 flex-1">
+                            <h4 class="font-bold text-sm leading-snug line-clamp-1 flex-1" style="color: var(--color-text);">
                                 {{ $announcement->title }}
                             </h4>
-                            <span class="shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900 mt-0.5">
+                            <span class="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5"
+                                  style="background: rgba(99,102,241,0.12); color: #6366f1; border: 1px solid rgba(99,102,241,0.2);">
                                 {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMM') : '' }}
                             </span>
                         </div>
-                        <!-- Preview isi -->
-                        <p class="text-xs text-[var(--color-text-muted)] line-clamp-3 leading-relaxed">
+                        <!-- Preview isi — hanya 2 baris -->
+                        <p class="text-xs line-clamp-2 leading-relaxed" style="color: var(--color-text-muted);">
                             {{ $announcement->content }}
                         </p>
                     </div>
                 @endforeach
             </div>
 
-            <!-- Tombol Baca Selengkapnya di bawah -->
+            <!-- Tombol Baca Selengkapnya -->
             <a href="{{ route('student.announcements') }}"
-               class="flex items-center justify-center gap-1.5 w-full py-3 bg-[var(--color-bg)] border-t border-[var(--color-border)] text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors">
+               class="flex items-center justify-center gap-1.5 w-full py-3 border-t border-[var(--color-border)] transition-colors"
+               style="background: var(--color-bg); color: #6366f1; font-size: 0.75rem; font-weight: 700;"
+               onmouseover="this.style.background='rgba(99,102,241,0.06)'"
+               onmouseout="this.style.background='var(--color-bg)'">
                 Baca Selengkapnya
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
