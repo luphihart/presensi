@@ -169,12 +169,7 @@
     @if(count($announcements) > 0)
         <div class="rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm">
             <!-- Header dengan gradient (inline style untuk kompatibilitas) -->
-            <div style="background: linear-gradient(to right, #6366f1, #a855f7);" class="px-4 py-3 flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: rgba(255,255,255,0.2);">
-                    <svg class="w-4 h-4" fill="none" stroke="white" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.761 1.761 0 013 12c0-.663.364-1.24.908-1.543l3.526-1.958"/>
-                    </svg>
-                </div>
+            <div style="background: linear-gradient(to right, #6366f1, #a855f7);" class="px-4 py-3">
                 <h3 style="color: white; font-weight: 700; font-size: 0.875rem; letter-spacing: 0.025em;">Pengumuman Sekolah</h3>
             </div>
 
