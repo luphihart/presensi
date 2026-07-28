@@ -23,15 +23,21 @@
 
     <!-- Bulk Action Bar -->
     @if(count($selectedStudents) > 0)
-        <div class="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-center justify-between shadow-sm animate-fade-in">
-            <div class="flex items-center space-x-2 text-xs font-bold text-rose-700 dark:text-rose-300">
-                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+        <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 flex flex-wrap items-center justify-between gap-3 shadow-sm animate-fade-in">
+            <div class="flex items-center space-x-2 text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-ping"></span>
                 <span>Terpilih {{ count($selectedStudents) }} murid</span>
             </div>
-            <button wire:click="deleteSelectedStudents" wire:confirm="Yakin ingin menghapus {{ count($selectedStudents) }} data murid terpilih sekaligus?" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm transition-all flex items-center space-x-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                <span>Hapus {{ count($selectedStudents) }} Murid Terpilih</span>
-            </button>
+            <div class="flex items-center space-x-2">
+                <button wire:click="bulkResetPassword" wire:confirm="Reset password untuk {{ count($selectedStudents) }} murid terpilih? Password baru akan di-generate secara acak." type="button" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow-sm transition-all flex items-center space-x-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 0121 9z"/></svg>
+                    <span>🔑 Reset Password ({{ count($selectedStudents) }})</span>
+                </button>
+                <button wire:click="deleteSelectedStudents" wire:confirm="Yakin ingin menghapus {{ count($selectedStudents) }} data murid terpilih sekaligus?" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm transition-all flex items-center space-x-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    <span>Hapus ({{ count($selectedStudents) }})</span>
+                </button>
+            </div>
         </div>
     @endif
 
@@ -106,6 +112,9 @@
                             <td class="px-6 py-4">{{ $student->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
+                                    <button wire:click="resetPassword({{ $student->id }})" wire:confirm="Reset password untuk {{ $student->user->name }}?" type="button" title="Reset Password" class="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 0121 9z"/></svg>
+                                    </button>
                                     <button wire:click="openEdit({{ $student->id }})" type="button" title="Edit Murid" class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-[var(--color-primary)] hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-all">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </button>
@@ -203,6 +212,41 @@
                         </x-ui.button>
                     </div>
                 </form>
+            </div>
+        </div>
+    @endif
+
+    <!-- Reset Password Results Modal -->
+    @if($showResetResultModal)
+        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 max-h-[80vh] overflow-y-auto">
+                <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
+                    <h3 class="font-bold text-lg text-[var(--color-text)]">🔑 Hasil Reset Password</h3>
+                    <button wire:click="$set('showResetResultModal', false)" type="button" class="text-slate-400 hover:text-slate-600">✕</button>
+                </div>
+
+                <p class="text-xs text-[var(--color-text-muted)]">Salin password baru berikut dan berikan kepada murid terkait:</p>
+
+                <div class="space-y-2 max-h-60 overflow-y-auto">
+                    @foreach($resetResults as $result)
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-[var(--color-border)] flex items-center justify-between text-xs">
+                            <div>
+                                <span class="font-bold block text-[var(--color-text)]">{{ $result['name'] }}</span>
+                                <span class="text-[var(--color-text-muted)] font-mono">NIS: {{ $result['nis'] }}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-[var(--color-text-muted)] block">Password Baru:</span>
+                                <code class="font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded text-sm select-all">{{ $result['password'] }}</code>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="pt-2 border-t border-[var(--color-border)]">
+                    <x-ui.button wire:click="$set('showResetResultModal', false)" variant="primary" class="w-full">
+                        Tutup
+                    </x-ui.button>
+                </div>
             </div>
         </div>
     @endif

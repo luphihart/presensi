@@ -75,6 +75,8 @@ class Dashboard extends Component
             $isSchoolDay = false;
         }
 
+        $announcements = \App\Models\Announcement::published()->latest('published_at')->take(3)->get();
+
         return view('livewire.student.dashboard', [
             'user' => $user,
             'student' => $student,
@@ -86,6 +88,7 @@ class Dashboard extends Component
             'totalHadir' => $totalHadir,
             'totalIzin' => $totalIzin,
             'totalAlpa' => $totalAlpa,
+            'announcements' => $announcements,
         ]);
     }
 }

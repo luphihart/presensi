@@ -29,8 +29,10 @@ class StudentTable extends Component
     public array $selectedStudents = [];
     public bool $selectAll = false;
 
-    // Modal Form State
+    // Modal Form & Reset State
     public bool $showFormModal = false;
+    public bool $showResetResultModal = false;
+    public array $resetResults = [];
     public ?int $studentId = null;
     public string $name = '';
     public string $email = '';
@@ -228,6 +230,60 @@ class StudentTable extends Component
 
             $this->reset(['selectedStudents', 'selectAll']);
             $this->successMessage = "Berhasil menghapus {$count} data murid terpilih.";
+        }
+    }
+
+    public function resetPassword(int $studentId): void
+    {
+        $student = Student::with('user')->find($studentId);
+        if ($student && $student->user) {
+            $newPassword = \Illuminate\Support\Str::random(8);
+            $student->user->update([
+                'password' => bcrypt($newPassword),
+            ]);
+
+            $this->resetResults = [
+                [
+                    'name' => $student->user->name,
+                    'nis' => $student->nis,
+                    'email' => $student->user->email,
+                    'password' => $newPassword,
+                ]
+            ];
+            $this->showResetResultModal = true;
+            $this->successMessage = "Password murid {$student->user->name} berhasil direset.";
+        }
+    }
+
+    public function bulkResetPassword(): void
+    {
+        if (count($this->selectedStudents) > 0) {
+            $students = Student::with('user')->whereIn('id', $this->selectedStudents)->get();
+            $results = [];
+
+            DB::transaction(function () use ($students, &$results) {
+                foreach ($students as $student) {
+                    if ($student->user) {
+                        $newPassword = \Illuminate\Support\Str::random(8);
+                        $student->user->update([
+                            'password' => bcrypt($newPassword),
+                        ]);
+
+                        $results[] = [
+                            'name' => $student->user->name,
+                            'nis' => $student->nis,
+                            'email' => $student->user->email,
+                            'password' => $newPassword,
+                        ];
+                    }
+                }
+            });
+
+            $this->resetResults = $results;
+            $this->showResetResultModal = true;
+            $count = count($results);
+            $this->reset(['selectedStudents', 'selectAll']);
+            $this->successMessage = "Berhasil mereset password {$count} murid terpilih.";
         }
     }
 

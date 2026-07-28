@@ -47,6 +47,11 @@ Route::post('/logout', function () {
     return redirect()->route('login');
 })->middleware('auth')->name('logout');
 
+use App\Livewire\Student\ChangePassword as StudentChangePassword;
+use App\Livewire\Student\AnnouncementList as StudentAnnouncementList;
+use App\Livewire\Admin\ChangePassword as AdminChangePassword;
+use App\Livewire\Admin\AnnouncementManagement;
+
 // Student Routes
 Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', StudentDashboard::class)->name('dashboard');
@@ -55,6 +60,8 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
     Route::get('/leave', LeaveRequestForm::class)->name('leave.index');
     Route::get('/history', AttendanceHistory::class)->name('history');
     Route::get('/profile', ProfileEdit::class)->name('profile');
+    Route::get('/password', StudentChangePassword::class)->name('password');
+    Route::get('/announcements', StudentAnnouncementList::class)->name('announcements');
 });
 
 // Admin Routes
@@ -72,4 +79,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/holidays', HolidayCalendar::class)->name('holidays.index');
     Route::get('/reports', ReportGenerator::class)->name('reports.index');
     Route::get('/settings', SchoolSettings::class)->name('settings.index');
+    Route::get('/password', AdminChangePassword::class)->name('password');
+    Route::get('/announcements', AnnouncementManagement::class)->name('announcements.index');
 });

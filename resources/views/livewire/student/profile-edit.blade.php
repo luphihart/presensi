@@ -80,7 +80,11 @@
         </form>
     </x-ui.card>
 
-    <div class="pt-2">
+    <div class="pt-2 space-y-3">
+        <a href="{{ route('student.password') }}" class="block w-full text-center py-3.5 rounded-2xl bg-[var(--color-bg)] text-[var(--color-text)] font-semibold text-sm border border-[var(--color-border)] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            🔑 Ubah Password
+        </a>
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="w-full py-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 font-semibold text-sm border border-rose-200 dark:border-rose-900">

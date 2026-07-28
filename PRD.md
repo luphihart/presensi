@@ -78,7 +78,14 @@ Aplikasi telah teruji dan berjalan stabil di VPS Linux (Ubuntu/Debian) dengan Ng
 ### 4.8 Rekap & Ekspor Laporan (Excel & PDF)
 - **Ekspor Excel Matriks (.xlsx)**: Rekap bulanan per tanggal lengkap dengan status `H`, `T`, `I`, `S`, `A`, persentase kehadiran, dan singkatan hari Bahasa Indonesia (`Rab`, `Kam`, `Jum`, `Sab`, `Min`, `Sen`, `Sel`).
 - **Ekspor PDF Lanskap (.pdf)**: Laporan lanskap siap cetak berformat A4 dengan penanggalan Bahasa Indonesia.
-- **Pengaturan Profil Sekolah (`/admin/settings`)**: Form pengubahan nama sekolah, alamat, dan nomor telepon yang terintegrasi langsung ke header laporan & sidebar murid.
+### 4.9 Fitur Ubah & Reset Password
+- **Self-Service Ubah Password**: Murid dan Admin dapat memperbarui kata sandi akun sendiri melalui halaman `Ubah Password`.
+- **Reset Password Murid oleh Admin**: Admin dapat mereset password murid secara **individual** (klik ikon 🔑 di tabel) atau secara **massal (bulk reset)** dengan mencentang beberapa murid. Sistem menggenerate password acak 8 karakter dan menampilkan daftar password baru dalam modal untuk diberikan ke murid.
+
+### 4.10 Pengumuman Sekolah (Announcements)
+- **Manajemen Pengumuman Admin**: Admin dapat membuat, mengedit, dan menghapus pengumuman resmi sekolah dengan status **Published** atau **Draft**.
+- **Notifikasi Massal**: Saat pengumuman dipublish, sistem secara otomatis mengirimkan notifikasi in-app 📢 ke seluruh akun murid aktif.
+- **Tampilan Murid**: Pengumuman aktif tampil dalam bentuk kartu ringkas di Beranda (Dashboard) Murid dan halaman daftar lengkap `Pengumuman`.
 
 ---
 

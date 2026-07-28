@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('type', ['leave_status', 'absence_reminder', 'birthday', 'new_leave_request', 'system']);
+            $table->enum('type', ['leave_status', 'absence_reminder', 'birthday', 'new_leave_request', 'announcement', 'system']);
             $table->string('title', 150);
             $table->text('body');
             $table->string('related_type', 50)->nullable();
