@@ -6,6 +6,9 @@
         </div>
 
         <div class="flex items-center space-x-2.5">
+            <button wire:click="recalculateAllStreaks" wire:confirm="Hitung ulang streak untuk seluruh murid aktif?" type="button" class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-all">
+                <span>🔥 Recalculate Streak All</span>
+            </button>
             <a href="{{ route('admin.students.import') }}" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-sm flex items-center space-x-1.5">
                 <span>📥 Import Excel</span>
             </a>
@@ -18,6 +21,44 @@
     @if($successMessage)
         <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm font-medium">
             ✓ {{ $successMessage }}
+        </div>
+    @endif
+
+    <!-- Leaderboard Kehadiran (Per Kelas / Global) -->
+    @if(count($leaderboard) > 0)
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-indigo-500/10 to-purple-500/10 border border-amber-200 dark:border-amber-900/50 space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl">🏆</span>
+                    <div>
+                        <h3 class="text-sm font-bold text-[var(--color-text)]">
+                            Leaderboard Streak Kehadiran {{ $classFilter ? '(' . ($classRooms->find($classFilter)?->name ?? 'Kelas') . ')' : '(Semua Kelas)' }}
+                        </h3>
+                        <p class="text-[11px] text-[var(--color-text-muted)]">Murid paling konsisten hadir tanpa alpa</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2.5">
+                @foreach($leaderboard as $index => $topStudent)
+                    @php $badge = $topStudent->getBadge(); @endphp
+                    <div class="p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 {{ $index === 0 ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border border-amber-300' : ($index === 1 ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200' : 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300') }}">
+                            #{{ $index + 1 }}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-bold text-[var(--color-text)] truncate">{{ $topStudent->user->name }}</p>
+                            <p class="text-[10px] text-[var(--color-text-muted)] truncate">{{ $topStudent->classRoom?->name ?? '-' }}</p>
+                            <div class="flex items-center gap-1 mt-0.5">
+                                <span class="text-xs font-extrabold text-amber-600 dark:text-amber-400">🔥 {{ $topStudent->current_streak }} hari</span>
+                                @if($badge)
+                                    <span title="{{ $badge['name'] }}">{{ $badge['icon'] }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     @endif
 
@@ -89,11 +130,22 @@
                         <th class="px-6 py-3.5">Email</th>
                         <th class="px-6 py-3.5">Kelas</th>
                         <th class="px-6 py-3.5">No. HP</th>
+                        <th wire:click="sortBy('streak')" class="px-6 py-3.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/40 select-none group transition-colors">
+                            <div class="flex items-center space-x-1.5">
+                                <span>Streak</span>
+                                @if($sortColumn === 'streak')
+                                    <span class="text-[var(--color-primary)] font-bold text-xs">{{ $sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                                @else
+                                    <span class="text-slate-300 dark:text-slate-600 opacity-50 group-hover:opacity-100 text-xs">↕</span>
+                                @endif
+                            </div>
+                        </th>
                         <th class="px-6 py-3.5">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[var(--color-border)] text-[var(--color-text)] text-xs">
                     @forelse($students as $student)
+                        @php $badge = $student->getBadge(); @endphp
                         <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 {{ in_array((string)$student->id, $selectedStudents, true) ? 'bg-indigo-50/50 dark:bg-indigo-950/20' : '' }}">
                             <td class="px-4 py-4 text-center">
                                 <input type="checkbox" wire:model.live="selectedStudents" value="{{ $student->id }}" class="rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)] cursor-pointer">
@@ -121,7 +173,21 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4">
+                                <div class="flex items-center space-x-1.5">
+                                    <span class="font-bold {{ $student->current_streak > 0 ? 'text-amber-600 dark:text-amber-400 font-mono' : 'text-slate-400' }}">
+                                        🔥 {{ $student->current_streak }} hr
+                                    </span>
+                                    @if($badge)
+                                        <span title="{{ $badge['name'] }} (Badge Milestone)">{{ $badge['icon'] }}</span>
+                                    @endif
+                                </div>
+                                <span class="text-[10px] text-[var(--color-text-muted)] block">Rekor: {{ $student->longest_streak }} hr</span>
+                            </td>
+                            <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
+                                    <button wire:click="recalculateStreak({{ $student->id }})" type="button" title="Hitung Ulang Streak" class="p-2 rounded-xl bg-orange-50 dark:bg-orange-950/40 text-orange-600 hover:bg-orange-100 dark:hover:bg-orange-900/60 transition-all">
+                                        🔥
+                                    </button>
                                     <button wire:click="resetPassword({{ $student->id }})" wire:confirm="Reset password untuk {{ $student->user->name }}?" type="button" title="Reset Password" class="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 0121 9z"/></svg>
                                     </button>

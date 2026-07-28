@@ -89,6 +89,12 @@ class CalculateDailyAbsences extends Command
             $alpaCount++;
         }
 
+        // Recalculate streak for all active students
+        $streakService = app(\App\Services\AttendanceStreakService::class);
+        foreach ($activeStudents as $student) {
+            $streakService->recalculateStreak($student);
+        }
+
         $this->info("Perhitungan alpa selesai untuk tanggal $dateStr. Total $alpaCount murid ditandai Alpa.");
         return Command::SUCCESS;
     }

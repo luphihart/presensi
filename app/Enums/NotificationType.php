@@ -9,5 +9,6 @@ enum NotificationType: string
     case Birthday = 'birthday';
     case NewLeaveRequest = 'new_leave_request';
     case Announcement = 'announcement';
+    case StreakMilestone = 'streak_milestone';
     case System = 'system';
 }

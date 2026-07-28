@@ -23,6 +23,8 @@ class Student extends Model
         'gender',
         'enrolled_at',
         'is_active',
+        'current_streak',
+        'longest_streak',
     ];
 
     protected function casts(): array
@@ -31,7 +33,19 @@ class Student extends Model
             'birth_date' => 'date',
             'enrolled_at' => 'date',
             'is_active' => 'boolean',
+            'current_streak' => 'integer',
+            'longest_streak' => 'integer',
         ];
+    }
+
+    public function getBadge(): ?array
+    {
+        return app(\App\Services\AttendanceStreakService::class)->getBadge($this->current_streak);
+    }
+
+    public function getNextMilestone(): ?array
+    {
+        return app(\App\Services\AttendanceStreakService::class)->getNextMilestone($this->current_streak);
     }
 
     public function user(): BelongsTo

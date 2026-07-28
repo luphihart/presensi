@@ -137,6 +137,8 @@ class AttendanceCheckIn extends Component
             ]
         );
 
+        app(\App\Services\AttendanceStreakService::class)->recalculateStreak($student);
+
         $this->successMessage = 'Presensi masuk berhasil tercatat jam ' . $now->format('H:i') . ' WIB (' . $status->label() . ')';
     }
 

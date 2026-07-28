@@ -146,6 +146,70 @@
         </div>
     </x-ui.card>
 
+    <!-- Streak Kehadiran Card (Gamifikasi) -->
+    @if($student)
+        <div class="rounded-3xl p-5 bg-gradient-to-br from-amber-500/10 via-indigo-500/10 to-purple-500/10 border border-amber-200 dark:border-amber-900/40 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white font-bold text-lg flex items-center justify-center shadow-md">
+                        🔥
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-[var(--color-text)]">Streak Kehadiran</h3>
+                        <p class="text-xs text-[var(--color-text-muted)] font-medium">
+                            @if(($student->current_streak ?? 0) > 0)
+                                {{ $student->current_streak }} hari berturut-turut! 🎉
+                            @else
+                                Belum ada streak aktif — yuk mulai hari ini! 💪
+                            @endif
+                        </p>
+                    </div>
+                </div>
+
+                @if($badge)
+                    <div class="px-3 py-1.5 rounded-2xl bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs font-bold flex items-center gap-1.5">
+                        <span class="text-sm">{{ $badge['icon'] }}</span>
+                        <span>{{ $badge['name'] }}</span>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Progress Bar ke Milestone Berikutnya -->
+            @if($nextMilestone)
+                @php
+                    $current = $student->current_streak ?? 0;
+                    $target = $nextMilestone['threshold'];
+                    $prevThreshold = 0;
+                    foreach(\App\Services\AttendanceStreakService::MILESTONES as $thresh => $b) {
+                        if ($thresh < $target && $thresh > $prevThreshold) { $prevThreshold = $thresh; }
+                    }
+                    $range = max(1, $target - $prevThreshold);
+                    $progressVal = max(0, $current - $prevThreshold);
+                    $percentage = min(100, round(($progressVal / $range) * 100));
+                    $remaining = $target - $current;
+                @endphp
+                <div class="space-y-1.5 pt-1">
+                    <div class="flex justify-between text-[11px] font-semibold text-[var(--color-text-muted)]">
+                        <span>Progress Milestone Next</span>
+                        <span class="text-[var(--color-primary)] font-bold">{{ $remaining }} hari lagi → {{ $nextMilestone['icon'] }} {{ $nextMilestone['name'] }}</span>
+                    </div>
+                    <div class="w-full h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden p-0.5 border border-slate-300/50 dark:border-slate-600/50">
+                        <div class="h-full rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-indigo-600 transition-all duration-500" style="width: {{ $percentage }}%;"></div>
+                    </div>
+                </div>
+            @else
+                <div class="text-[11px] font-bold text-amber-600 dark:text-amber-400 text-center pt-1">
+                    🏆 Luar biasa! Kamu sudah mencapai Milestone Tertinggi (Hadir Champion)! 👑
+                </div>
+            @endif
+
+            <div class="flex items-center justify-between pt-2 border-t border-amber-200/50 dark:border-amber-900/30 text-[11px] text-[var(--color-text-muted)]">
+                <span>Rekor Terbaikmu: <strong class="text-[var(--color-text)]">{{ $student->longest_streak ?? 0 }} Hari</strong> 🏅</span>
+                <span class="italic">Izin/Sakit disetujui tidak memutus streak ✨</span>
+            </div>
+        </div>
+    @endif
+
     <!-- Quick Shortcuts -->
     <div class="grid grid-cols-2 gap-4">
         <a href="{{ route('student.leave.index') }}" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center hover:border-[var(--color-primary)] transition-all shadow-sm">

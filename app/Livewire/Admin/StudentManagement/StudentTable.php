@@ -291,6 +291,25 @@ class StudentTable extends Component
         }
     }
 
+    public function recalculateStreak(int $id): void
+    {
+        $student = Student::find($id);
+        if ($student) {
+            app(\App\Services\AttendanceStreakService::class)->recalculateStreak($student);
+            $this->successMessage = "Hitung ulang streak untuk {$student->user->name} selesai (Streak saat ini: {$student->current_streak} hari).";
+        }
+    }
+
+    public function recalculateAllStreaks(): void
+    {
+        $students = Student::where('is_active', true)->get();
+        $streakService = app(\App\Services\AttendanceStreakService::class);
+        foreach ($students as $student) {
+            $streakService->recalculateStreak($student);
+        }
+        $this->successMessage = "Berhasil menghitung ulang streak untuk seluruh " . count($students) . " murid aktif.";
+    }
+
     public function render()
     {
         $schoolYear = SchoolYear::getActive();
@@ -315,15 +334,32 @@ class StudentTable extends Component
                   ->orderBy('users.name', $this->sortDirection);
         } elseif ($this->sortColumn === 'nis') {
             $query->orderBy('students.nis', $this->sortDirection);
+        } elseif ($this->sortColumn === 'streak') {
+            $query->orderBy('students.current_streak', $this->sortDirection);
         } else {
             $query->latest();
         }
 
         $students = $query->paginate(15);
 
+        // Leaderboard Top 5 Streaks (per kelas jika ada filter kelas, atau global)
+        $leaderboardQuery = Student::with(['user', 'classRoom'])
+            ->where('is_active', true)
+            ->where('current_streak', '>', 0);
+
+        if (!empty($this->classFilter)) {
+            $leaderboardQuery->where('class_room_id', $this->classFilter);
+        }
+
+        $leaderboard = $leaderboardQuery->orderByDesc('current_streak')
+            ->orderByDesc('longest_streak')
+            ->take(5)
+            ->get();
+
         return view('livewire.admin.student-management.student-table', [
             'students' => $students,
             'classRooms' => $classRooms,
+            'leaderboard' => $leaderboard,
         ]);
     }
 }

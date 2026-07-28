@@ -52,6 +52,8 @@ class LeaveRequestManagement extends Component
             'related_type' => LeaveRequest::class,
             'related_id' => $leave->id,
         ]);
+
+        app(\App\Services\AttendanceStreakService::class)->recalculateStreak($leave->student);
     }
 
     public function reject(int $id): void
@@ -74,6 +76,8 @@ class LeaveRequestManagement extends Component
             'related_type' => LeaveRequest::class,
             'related_id' => $leave->id,
         ]);
+
+        app(\App\Services\AttendanceStreakService::class)->recalculateStreak($leave->student);
     }
 
     public function deleteLeaveRequest(int $id): void

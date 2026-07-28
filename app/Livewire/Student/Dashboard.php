@@ -77,6 +77,9 @@ class Dashboard extends Component
 
         $announcements = \App\Models\Announcement::published()->latest('published_at')->take(3)->get();
 
+        $badge = $student ? $student->getBadge() : null;
+        $nextMilestone = $student ? $student->getNextMilestone() : null;
+
         return view('livewire.student.dashboard', [
             'user' => $user,
             'student' => $student,
@@ -89,6 +92,8 @@ class Dashboard extends Component
             'totalIzin' => $totalIzin,
             'totalAlpa' => $totalAlpa,
             'announcements' => $announcements,
+            'badge' => $badge,
+            'nextMilestone' => $nextMilestone,
         ]);
     }
 }
