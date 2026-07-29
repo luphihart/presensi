@@ -208,6 +208,34 @@
                 <span class="italic">Izin/Sakit disetujui tidak memutus streak ✨</span>
             </div>
         </div>
+
+        <!-- Leaderboard & Prestasi Banner Card -->
+        <a href="{{ route('student.leaderboard') }}" class="block rounded-3xl p-5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md hover:shadow-lg hover:scale-[1.01] transition-all relative overflow-hidden group">
+            <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition-all"></div>
+            
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/20">
+                        🏆
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h3 class="font-bold text-base leading-tight">Kedisiplinan & Peringkat</h3>
+                            <span class="bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                                #{{ $student->monthly_rank ?? '-' }}
+                            </span>
+                        </div>
+                        <p class="text-xs text-indigo-100 mt-1">
+                            Total Poin: <strong class="text-amber-300">{{ number_format($student->monthly_points ?? 0) }} pt</strong> bulan ini • Cek klasemen kelas & badges
+                        </p>
+                    </div>
+                </div>
+
+                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0 group-hover:translate-x-1 transition-all">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+        </a>
     @endif
 
     <!-- Quick Shortcuts -->

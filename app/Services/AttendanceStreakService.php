@@ -152,6 +152,7 @@ class AttendanceStreakService
             $hasLeave = in_array($dateStr, $approvedLeaves, true);
 
             if ($att) {
+                app(\App\Services\DisciplinePointService::class)->syncAttendancePoints($student, $att);
                 $statusVal = is_string($att->status) ? $att->status : $att->status->value;
                 if (in_array($statusVal, [AttendanceStatus::Hadir->value, AttendanceStatus::Terlambat->value], true)) {
                     $currentStreak++;
@@ -180,6 +181,9 @@ class AttendanceStreakService
             'current_streak' => $currentStreak,
             'longest_streak' => max($longestStreak, (int)($student->longest_streak ?? 0)),
         ]);
+
+        app(\App\Services\DisciplinePointService::class)->recalculateStudentTotals($student);
+        app(\App\Services\DisciplinePointService::class)->checkAndAwardBadges($student);
 
         $this->checkAndNotifyMilestone($student, $oldStreak, $currentStreak);
 

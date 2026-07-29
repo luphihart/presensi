@@ -101,6 +101,13 @@ class Dashboard extends Component
             'students'     => $mapData,
         ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE);
 
+        $topDisciplineStudents = Student::with(['user', 'classRoom'])
+            ->where('is_active', true)
+            ->orderByDesc('monthly_points')
+            ->orderByDesc('total_points')
+            ->take(5)
+            ->get();
+
         return view('livewire.admin.dashboard', [
             'totalStudents' => $totalStudents,
             'totalHadir'    => $totalHadir,
@@ -111,6 +118,7 @@ class Dashboard extends Component
             'schoolLocation'=> $schoolLocation,
             'mapData'       => $mapData,
             'mapConfigJson' => $mapConfigJson,
+            'topDisciplineStudents' => $topDisciplineStudents,
         ]);
     }
 }

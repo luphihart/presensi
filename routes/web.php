@@ -49,6 +49,7 @@ Route::post('/logout', function () {
 
 use App\Livewire\Student\ChangePassword as StudentChangePassword;
 use App\Livewire\Student\AnnouncementList as StudentAnnouncementList;
+use App\Livewire\Student\Leaderboard as StudentLeaderboard;
 use App\Livewire\Admin\ChangePassword as AdminChangePassword;
 use App\Livewire\Admin\AnnouncementManagement;
 
@@ -62,6 +63,7 @@ Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->gro
     Route::get('/profile', ProfileEdit::class)->name('profile');
     Route::get('/password', StudentChangePassword::class)->name('password');
     Route::get('/announcements', StudentAnnouncementList::class)->name('announcements');
+    Route::get('/leaderboard', StudentLeaderboard::class)->name('leaderboard');
 });
 
 // Admin Routes

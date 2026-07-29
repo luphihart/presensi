@@ -25,6 +25,9 @@ class Student extends Model
         'is_active',
         'current_streak',
         'longest_streak',
+        'total_points',
+        'monthly_points',
+        'monthly_rank',
     ];
 
     protected function casts(): array
@@ -35,6 +38,9 @@ class Student extends Model
             'is_active' => 'boolean',
             'current_streak' => 'integer',
             'longest_streak' => 'integer',
+            'total_points' => 'integer',
+            'monthly_points' => 'integer',
+            'monthly_rank' => 'integer',
         ];
     }
 
@@ -66,5 +72,15 @@ class Student extends Model
     public function leaveRequests(): HasMany
     {
         return $this->hasMany(LeaveRequest::class);
+    }
+
+    public function disciplinePoints(): HasMany
+    {
+        return $this->hasMany(DisciplinePoint::class);
+    }
+
+    public function badges(): HasMany
+    {
+        return $this->hasMany(StudentBadge::class);
     }
 }

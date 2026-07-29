@@ -194,6 +194,53 @@
         </div>
     </x-ui.card>
 
+    <!-- Top 5 Murid Terdisiplin Bulan Ini Card -->
+    <x-ui.card class="space-y-4">
+        <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-[var(--color-text)] flex items-center gap-2">
+                <span>🏆</span> Top 5 Murid Terdisiplin Bulan Ini
+            </h3>
+            <span class="text-xs text-[var(--color-text-muted)] font-medium">Berdasarkan Akumulasi Poin Kehadiran</span>
+        </div>
+
+        <div class="space-y-2">
+            @forelse($topDisciplineStudents as $index => $st)
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-[var(--color-border)]">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <div class="w-7 h-7 rounded-lg flex items-center justify-center font-extrabold text-xs shrink-0
+                            @if($index === 0) bg-amber-400 text-slate-900
+                            @elseif($index === 1) bg-slate-300 dark:bg-slate-600 text-slate-900 dark:text-white
+                            @elseif($index === 2) bg-amber-700 text-white
+                            @else bg-slate-200 dark:bg-slate-700 text-[var(--color-text-muted)] @endif">
+                            #{{ $index + 1 }}
+                        </div>
+
+                        @if($st->profile_photo_path)
+                            <img src="{{ asset('storage/' . $st->profile_photo_path) }}" class="w-8 h-8 rounded-full object-cover shrink-0">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-bold text-xs flex items-center justify-center shrink-0">
+                                {{ strtoupper(substr($st->user->name, 0, 2)) }}
+                            </div>
+                        @endif
+
+                        <div class="min-w-0">
+                            <p class="font-bold text-xs text-[var(--color-text)] truncate">{{ $st->user->name }}</p>
+                            <p class="text-[11px] text-[var(--color-text-muted)] truncate">Kelas {{ $st->classRoom?->full_name ?? '-' }} • NIS {{ $st->nis }}</p>
+                        </div>
+                    </div>
+
+                    <div class="text-right shrink-0">
+                        <span class="font-extrabold text-xs text-[var(--color-primary)] bg-[var(--color-primary-soft)] px-2.5 py-1 rounded-lg">
+                            ⚡ {{ number_format($st->monthly_points) }} pt
+                        </span>
+                    </div>
+                </div>
+            @empty
+                <p class="text-xs text-[var(--color-text-muted)] py-4 text-center">Belum ada data poin murid bulan ini.</p>
+            @endforelse
+        </div>
+    </x-ui.card>
+
     <!-- Photo Preview Pop-up Modal -->
     <template x-if="previewPhotoUrl">
         <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4"

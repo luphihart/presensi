@@ -140,6 +140,7 @@
                                 @endif
                             </div>
                         </th>
+                        <th class="px-6 py-3.5">Poin Bulan Ini</th>
                         <th class="px-6 py-3.5">Aksi</th>
                     </tr>
                 </thead>
@@ -182,6 +183,12 @@
                                     @endif
                                 </div>
                                 <span class="text-[10px] text-[var(--color-text-muted)] block">Rekor: {{ $student->longest_streak }} hr</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="font-extrabold text-xs text-[var(--color-primary)] bg-[var(--color-primary-soft)] px-2.5 py-1 rounded-lg inline-block">
+                                    ⚡ {{ number_format($student->monthly_points) }} pt
+                                </span>
+                                <span class="text-[10px] text-[var(--color-text-muted)] block mt-0.5">Total: {{ number_format($student->total_points) }} pt</span>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
