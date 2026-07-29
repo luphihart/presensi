@@ -26,7 +26,6 @@
                     <tr class="border-b border-[var(--color-border)] text-xs font-semibold text-[var(--color-text-muted)] uppercase bg-slate-50 dark:bg-slate-800/40">
                         <th class="px-6 py-3.5">Judul Pengumuman</th>
                         <th class="px-6 py-3.5">Status</th>
-                        <th class="px-6 py-3.5">Dibuat Oleh</th>
                         <th class="px-6 py-3.5">Tanggal Publish</th>
                         <th class="px-6 py-3.5">Aksi</th>
                     </tr>
@@ -49,7 +48,6 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 font-medium">{{ $announcement->createdBy->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-[var(--color-text-muted)]">
                                 {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMMM YYYY, HH:mm') : '-' }}
                             </td>
@@ -69,7 +67,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-[var(--color-text-muted)]">Belum ada pengumuman. Klik "+ Buat Pengumuman" untuk membuat baru.</td>
+                            <td colspan="4" class="px-6 py-8 text-center text-[var(--color-text-muted)]">Belum ada pengumuman. Klik "+ Buat Pengumuman" untuk membuat baru.</td>
                         </tr>
                     @endforelse
                 </tbody>
