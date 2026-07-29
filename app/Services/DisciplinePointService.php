@@ -145,6 +145,22 @@ class DisciplinePointService
     }
 
     /**
+     * Recalculate and populate points/badges for ALL active students and ALL attendances.
+     * Useful for initial sync of historical attendance data.
+     */
+    public function recalculateAllStudents(): void
+    {
+        $students = Student::where('is_active', true)->get();
+        $streakService = app(AttendanceStreakService::class);
+
+        foreach ($students as $student) {
+            $streakService->recalculateStreak($student);
+        }
+
+        $this->recalculateRanks();
+    }
+
+    /**
      * Recalculate monthly rankings for students in a class or all active students.
      */
     public function recalculateRanks(?int $classRoomId = null): void

@@ -12,8 +12,8 @@ class UpdateLeaderboard extends Command
 
     public function handle(DisciplinePointService $disciplineService): int
     {
-        $this->info('Recalculating student leaderboard rankings...');
-        $disciplineService->recalculateRanks();
+        $this->info('Recalculating student leaderboard points and rankings...');
+        $disciplineService->recalculateAllStudents();
         $this->info('Student leaderboard rankings recalculated successfully!');
         return Command::SUCCESS;
     }
