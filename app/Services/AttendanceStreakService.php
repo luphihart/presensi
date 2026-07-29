@@ -31,30 +31,35 @@ class AttendanceStreakService
     /**
      * Recalculates current_streak & longest_streak for a given student.
      */
-    public function recalculateStreak(Student $student): array
+    public function recalculateStreak(Student $student, ?array $holidays = null, ?array $schedules = null): array
     {
         $schoolYear = SchoolYear::getActive();
 
         $today = Carbon::today();
 
-        // Fetch holidays (only if school year exists)
-        $holidays = [];
-        $schedules = [];
+        // Fetch holidays & schedules if not pre-loaded
         $schoolYearStart = null;
 
         if ($schoolYear) {
-            $holidays = Holiday::where('school_year_id', $schoolYear->id)
-                ->pluck('date')
-                ->map(fn($d) => Carbon::parse($d)->toDateString())
-                ->toArray();
+            if ($holidays === null) {
+                $holidays = Holiday::where('school_year_id', $schoolYear->id)
+                    ->pluck('date')
+                    ->map(fn($d) => Carbon::parse($d)->toDateString())
+                    ->toArray();
+            }
 
-            $schedules = Schedule::where('school_year_id', $schoolYear->id)
-                ->pluck('is_school_day', 'day_of_week')
-                ->toArray();
+            if ($schedules === null) {
+                $schedules = Schedule::where('school_year_id', $schoolYear->id)
+                    ->pluck('is_school_day', 'day_of_week')
+                    ->toArray();
+            }
 
             // Cap startDate to school year start so old data from previous years
             // does not create massive gaps of implicit 'Alpa'
             $schoolYearStart = Carbon::parse($schoolYear->start_date);
+        } else {
+            $holidays = $holidays ?? [];
+            $schedules = $schedules ?? [];
         }
 
         // Determine start date: earliest attendance/leave within this school year
@@ -152,7 +157,7 @@ class AttendanceStreakService
             $hasLeave = in_array($dateStr, $approvedLeaves, true);
 
             if ($att) {
-                app(\App\Services\DisciplinePointService::class)->syncAttendancePoints($student, $att);
+                app(\App\Services\DisciplinePointService::class)->syncAttendancePoints($student, $att, true);
                 $statusVal = is_string($att->status) ? $att->status : $att->status->value;
                 if (in_array($statusVal, [AttendanceStatus::Hadir->value, AttendanceStatus::Terlambat->value], true)) {
                     $currentStreak++;

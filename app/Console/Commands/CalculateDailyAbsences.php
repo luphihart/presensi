@@ -53,46 +53,46 @@ class CalculateDailyAbsences extends Command
         $activeStudents = Student::where('is_active', true)->get();
         $alpaCount = 0;
 
-        foreach ($activeStudents as $student) {
-            // Check existing attendance
-            $hasAttendance = Attendance::where('student_id', $student->id)
-                ->where('date', $dateStr)
-                ->exists();
+        $todayAttendances = Attendance::where('date', $dateStr)->pluck('student_id')->toBase()->flip();
+        $todayApprovedLeaves = LeaveRequest::where('date', $dateStr)->where('status', LeaveStatus::Approved)->pluck('student_id')->toBase()->flip();
 
-            if ($hasAttendance) continue;
+        $holidays = Holiday::where('school_year_id', $schoolYear->id)
+            ->pluck('date')
+            ->map(fn($d) => Carbon::parse($d)->toDateString())
+            ->toArray();
 
-            // Check approved leave request
-            $hasApprovedLeave = LeaveRequest::where('student_id', $student->id)
-                ->where('date', $dateStr)
-                ->where('status', LeaveStatus::Approved)
-                ->exists();
+        $schedules = Schedule::where('school_year_id', $schoolYear->id)
+            ->pluck('is_school_day', 'day_of_week')
+            ->toArray();
 
-            if ($hasApprovedLeave) continue;
-
-            // Mark as Alpa (Idempotent updateOrCreate)
-            Attendance::updateOrCreate(
-                ['student_id' => $student->id, 'date' => $dateStr],
-                [
-                    'school_year_id' => $schoolYear->id,
-                    'status' => AttendanceStatus::Alpa,
-                ]
-            );
-
-            // Send notification to student
-            \App\Models\Notification::create([
-                'user_id' => $student->user_id,
-                'type' => \App\Enums\NotificationType::AbsenceReminder,
-                'title' => 'Pemberitahuan Ketidakhadiran ⚠️',
-                'body' => 'Anda ditandai Alpa (Tanpa Keterangan) untuk tanggal ' . $targetDate->locale('id')->isoFormat('D MMMM YYYY') . '.',
-            ]);
-
-            $alpaCount++;
-        }
-
-        // Recalculate streak for all active students
         $streakService = app(\App\Services\AttendanceStreakService::class);
+
         foreach ($activeStudents as $student) {
-            $streakService->recalculateStreak($student);
+            $hasAttendance = isset($todayAttendances[$student->id]);
+            $hasApprovedLeave = isset($todayApprovedLeaves[$student->id]);
+
+            if (!$hasAttendance && !$hasApprovedLeave) {
+                // Mark as Alpa (Idempotent updateOrCreate)
+                Attendance::updateOrCreate(
+                    ['student_id' => $student->id, 'date' => $dateStr],
+                    [
+                        'school_year_id' => $schoolYear->id,
+                        'status' => AttendanceStatus::Alpa,
+                    ]
+                );
+
+                // Send notification to student
+                \App\Models\Notification::create([
+                    'user_id' => $student->user_id,
+                    'type' => \App\Enums\NotificationType::AbsenceReminder,
+                    'title' => 'Pemberitahuan Ketidakhadiran ⚠️',
+                    'body' => 'Anda ditandai Alpa (Tanpa Keterangan) untuk tanggal ' . $targetDate->locale('id')->isoFormat('D MMMM YYYY') . '.',
+                ]);
+
+                $alpaCount++;
+            }
+
+            $streakService->recalculateStreak($student, $holidays, $schedules);
         }
 
         $this->info("Perhitungan alpa selesai untuk tanggal $dateStr. Total $alpaCount murid ditandai Alpa.");

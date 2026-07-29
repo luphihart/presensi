@@ -16,8 +16,9 @@ echo "📦 2/7 Installing PHP Composer Dependencies (Production)..."
 composer install --no-dev --optimize-autoloader
 
 # 3. Kunci Aplikasi & Database Migration
-echo "🗄️ 3/7 Running Database Migrations..."
+echo "🗄️ 3/7 Running Database Migrations & Leaderboard Sync..."
 php artisan migrate --force
+php artisan discipline:update-leaderboard
 
 # 4. Storage Link, Livewire Assets & Permission
 echo "📁 4/7 Linking Storage, Publishing Livewire Assets & Fixing Permissions..."

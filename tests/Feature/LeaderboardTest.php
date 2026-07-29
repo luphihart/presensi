@@ -68,6 +68,7 @@ class LeaderboardTest extends TestCase
             'date' => Carbon::today()->toDateString(),
             'status' => AttendanceStatus::Hadir,
             'check_in_at' => now(),
+            'check_out_at' => now()->addHours(8),
         ]);
 
         $service = app(DisciplinePointService::class);
@@ -81,7 +82,31 @@ class LeaderboardTest extends TestCase
         $this->assertDatabaseHas('discipline_points', [
             'student_id' => $this->student->id,
             'points' => 10,
-            'reason' => 'Hadir Tepat Waktu',
+            'reason' => 'Hadir Tepat Waktu (Lengkap Masuk & Pulang)',
+        ]);
+    }
+
+    public function test_partial_attendance_points_checkin_only(): void
+    {
+        $attendance = Attendance::create([
+            'student_id' => $this->student->id,
+            'school_year_id' => $this->schoolYear->id,
+            'date' => Carbon::today()->toDateString(),
+            'status' => AttendanceStatus::Hadir,
+            'check_in_at' => now(),
+        ]);
+
+        $service = app(DisciplinePointService::class);
+        $service->syncAttendancePoints($this->student, $attendance);
+
+        $this->student->refresh();
+
+        $this->assertEquals(7, $this->student->total_points);
+
+        $this->assertDatabaseHas('discipline_points', [
+            'student_id' => $this->student->id,
+            'points' => 7,
+            'reason' => 'Hadir Tepat Waktu (Presensi Masuk)',
         ]);
     }
 

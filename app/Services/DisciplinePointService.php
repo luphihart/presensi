@@ -68,21 +68,32 @@ class DisciplinePointService
     /**
      * Calculate and sync points for a student's attendance record.
      */
-    public function syncAttendancePoints(Student $student, Attendance $attendance): void
+    public function syncAttendancePoints(Student $student, Attendance $attendance, bool $deferTotals = false): void
     {
         $statusVal = is_string($attendance->status) ? $attendance->status : $attendance->status->value;
+        $hasCheckOut = !is_null($attendance->check_out_at);
 
         $points = 0;
         $reason = '';
 
         switch ($statusVal) {
             case AttendanceStatus::Hadir->value:
-                $points = 10;
-                $reason = 'Hadir Tepat Waktu';
+                if ($hasCheckOut) {
+                    $points = 10;
+                    $reason = 'Hadir Tepat Waktu (Lengkap Masuk & Pulang)';
+                } else {
+                    $points = 7;
+                    $reason = 'Hadir Tepat Waktu (Presensi Masuk)';
+                }
                 break;
             case AttendanceStatus::Terlambat->value:
-                $points = 5;
-                $reason = 'Hadir Terlambat';
+                if ($hasCheckOut) {
+                    $points = 5;
+                    $reason = 'Hadir Terlambat (Lengkap Masuk & Pulang)';
+                } else {
+                    $points = 3;
+                    $reason = 'Hadir Terlambat (Presensi Masuk)';
+                }
                 break;
             case AttendanceStatus::Izin->value:
                 $points = 3;
@@ -119,8 +130,10 @@ class DisciplinePointService
                 ->delete();
         }
 
-        $this->recalculateStudentTotals($student);
-        $this->checkAndAwardBadges($student);
+        if (!$deferTotals) {
+            $this->recalculateStudentTotals($student);
+            $this->checkAndAwardBadges($student);
+        }
     }
 
     /**

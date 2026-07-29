@@ -41,8 +41,21 @@ class SchoolYear extends Model
         return $this->hasMany(Holiday::class);
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('active_school_year');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('active_school_year');
+        });
+    }
+
     public static function getActive(): ?self
     {
-        return static::where('is_active', true)->first();
+        return \Illuminate\Support\Facades\Cache::remember('active_school_year', 3600, function () {
+            return static::where('is_active', true)->first();
+        });
     }
 }

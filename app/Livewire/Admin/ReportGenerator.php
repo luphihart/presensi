@@ -59,7 +59,9 @@ class ReportGenerator extends Component
         $students = $studentQuery->get();
 
         // Fetch attendances for date range
-        $attendances = Attendance::whereBetween('date', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
+        $studentIds = $students->pluck('id');
+        $attendances = Attendance::whereIn('student_id', $studentIds)
+            ->whereBetween('date', [$startOfMonth->toDateString(), $endOfMonth->toDateString()])
             ->get()
             ->groupBy('student_id');
 

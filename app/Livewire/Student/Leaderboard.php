@@ -45,7 +45,12 @@ class Leaderboard extends Component
                 ->orderBy('id');
         }
 
-        $allRankings = $leaderboardQuery->get();
+        $classId = $classRoom?->id ?? 'global';
+        $cacheKey = "leaderboard_rankings_{$classId}_{$this->tab}";
+
+        $allRankings = \Illuminate\Support\Facades\Cache::remember($cacheKey, 300, function () use ($leaderboardQuery) {
+            return $leaderboardQuery->get();
+        });
 
         // Calculate current student rank dynamically based on current tab sorting
         $myRank = null;

@@ -221,7 +221,7 @@ class StudentTable extends Component
     {
         if (count($this->selectedStudents) > 0) {
             $count = count($this->selectedStudents);
-            $students = Student::withTrashed()->whereIn('id', $this->selectedStudents)->get();
+            $students = Student::withTrashed()->with('user')->whereIn('id', $this->selectedStudents)->get();
 
             DB::transaction(function () use ($students) {
                 foreach ($students as $student) {
@@ -304,8 +304,23 @@ class StudentTable extends Component
     {
         $students = Student::where('is_active', true)->get();
         $streakService = app(\App\Services\AttendanceStreakService::class);
+        $schoolYear = SchoolYear::getActive();
+
+        $holidays = [];
+        $schedules = [];
+        if ($schoolYear) {
+            $holidays = \App\Models\Holiday::where('school_year_id', $schoolYear->id)
+                ->pluck('date')
+                ->map(fn($d) => \Carbon\Carbon::parse($d)->toDateString())
+                ->toArray();
+
+            $schedules = \App\Models\Schedule::where('school_year_id', $schoolYear->id)
+                ->pluck('is_school_day', 'day_of_week')
+                ->toArray();
+        }
+
         foreach ($students as $student) {
-            $streakService->recalculateStreak($student);
+            $streakService->recalculateStreak($student, $holidays, $schedules);
         }
         $this->successMessage = "Berhasil menghitung ulang streak untuk seluruh " . count($students) . " murid aktif.";
     }

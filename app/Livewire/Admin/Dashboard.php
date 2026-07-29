@@ -57,12 +57,15 @@ class Dashboard extends Component
         $today = Carbon::today()->toDateString();
         $totalStudents = Student::where('is_active', true)->count();
 
-        $todayAttendances = Attendance::where('date', $today)->get();
+        $statusCounts = Attendance::where('date', $today)
+            ->selectRaw('status, COUNT(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
 
-        $totalHadir = $todayAttendances->filter(fn($a) => $a->status?->value === 'hadir')->count();
-        $totalTerlambat = $todayAttendances->filter(fn($a) => $a->status?->value === 'terlambat')->count();
-        $totalIzin = $todayAttendances->filter(fn($a) => in_array($a->status?->value, ['izin', 'sakit']))->count();
-        $totalAlpa = $todayAttendances->filter(fn($a) => $a->status?->value === 'alpa')->count();
+        $totalHadir = $statusCounts['hadir'] ?? 0;
+        $totalTerlambat = $statusCounts['terlambat'] ?? 0;
+        $totalIzin = ($statusCounts['izin'] ?? 0) + ($statusCounts['sakit'] ?? 0);
+        $totalAlpa = $statusCounts['alpa'] ?? 0;
 
         $pendingLeaves = LeaveRequest::where('status', LeaveStatus::Pending)
             ->with(['student.user', 'student.classRoom'])
@@ -70,7 +73,7 @@ class Dashboard extends Component
             ->take(5)
             ->get();
 
-        $schoolLocation = SchoolLocation::first();
+        $schoolLocation = \Illuminate\Support\Facades\Cache::remember('school_location_first', 3600, fn() => SchoolLocation::first());
 
         $mapData = Attendance::where('date', $today)
             ->whereNotNull('check_in_latitude')

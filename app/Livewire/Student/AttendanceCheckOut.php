@@ -131,6 +131,8 @@ class AttendanceCheckOut extends Component
             'check_out_photo_path' => $photoPath,
         ]);
 
+        app(\App\Services\AttendanceStreakService::class)->recalculateStreak($student);
+
         $this->successMessage = 'Presensi pulang berhasil tercatat jam ' . $now->format('H:i') . ' WIB';
     }
 
