@@ -108,6 +108,8 @@ class Dashboard extends Component
             ->where('is_active', true)
             ->orderByDesc('monthly_points')
             ->orderByDesc('total_points')
+            ->orderByDesc('current_streak')
+            ->orderByRaw('CASE WHEN avg_check_in_seconds IS NULL THEN 1 ELSE 0 END, avg_check_in_seconds ASC')
             ->take(5)
             ->get();
 

@@ -151,9 +151,25 @@ class DisciplinePointService
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('points');
 
+        // Calculate average check-in time of day in seconds past midnight (earliest check-in tie-breaker)
+        $avgCheckInSeconds = null;
+        $checkIns = Attendance::where('student_id', $student->id)
+            ->whereNotNull('check_in_at')
+            ->get();
+
+        if ($checkIns->isNotEmpty()) {
+            $totalSecs = 0;
+            foreach ($checkIns as $att) {
+                $time = Carbon::parse($att->check_in_at);
+                $totalSecs += ($time->hour * 3600 + $time->minute * 60 + $time->second);
+            }
+            $avgCheckInSeconds = (int) round($totalSecs / $checkIns->count());
+        }
+
         $student->update([
             'total_points' => $totalPoints,
             'monthly_points' => $monthlyPoints,
+            'avg_check_in_seconds' => $avgCheckInSeconds,
         ]);
     }
 
@@ -190,6 +206,8 @@ class DisciplinePointService
                 ->where('is_active', true)
                 ->orderByDesc('monthly_points')
                 ->orderByDesc('total_points')
+                ->orderByDesc('current_streak')
+                ->orderByRaw('CASE WHEN avg_check_in_seconds IS NULL THEN 1 ELSE 0 END, avg_check_in_seconds ASC')
                 ->orderBy('id')
                 ->get();
 

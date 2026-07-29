@@ -28,6 +28,7 @@ class Student extends Model
         'total_points',
         'monthly_points',
         'monthly_rank',
+        'avg_check_in_seconds',
     ];
 
     protected function casts(): array
@@ -41,7 +42,16 @@ class Student extends Model
             'total_points' => 'integer',
             'monthly_points' => 'integer',
             'monthly_rank' => 'integer',
+            'avg_check_in_seconds' => 'integer',
         ];
+    }
+
+    public function getFormattedAvgCheckInTimeAttribute(): ?string
+    {
+        if ($this->avg_check_in_seconds === null) return null;
+        $hours = floor($this->avg_check_in_seconds / 3600);
+        $minutes = floor(($this->avg_check_in_seconds % 3600) / 60);
+        return sprintf('%02d:%02d', $hours, $minutes);
     }
 
     public function getBadge(): ?array

@@ -368,6 +368,7 @@ class StudentTable extends Component
 
         $leaderboard = $leaderboardQuery->orderByDesc('current_streak')
             ->orderByDesc('longest_streak')
+            ->orderByRaw('CASE WHEN avg_check_in_seconds IS NULL THEN 1 ELSE 0 END, avg_check_in_seconds ASC')
             ->take(5)
             ->get();
 

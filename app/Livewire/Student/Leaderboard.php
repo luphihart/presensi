@@ -38,10 +38,14 @@ class Leaderboard extends Component
         if ($this->tab === 'monthly') {
             $leaderboardQuery->orderByDesc('monthly_points')
                 ->orderByDesc('total_points')
+                ->orderByDesc('current_streak')
+                ->orderByRaw('CASE WHEN avg_check_in_seconds IS NULL THEN 1 ELSE 0 END, avg_check_in_seconds ASC')
                 ->orderBy('id');
         } else {
             $leaderboardQuery->orderByDesc('total_points')
                 ->orderByDesc('monthly_points')
+                ->orderByDesc('current_streak')
+                ->orderByRaw('CASE WHEN avg_check_in_seconds IS NULL THEN 1 ELSE 0 END, avg_check_in_seconds ASC')
                 ->orderBy('id');
         }
 
