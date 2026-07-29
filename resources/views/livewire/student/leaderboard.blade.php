@@ -104,7 +104,7 @@
                                         {{ strtoupper(substr($second->user->name, 0, 2)) }}
                                     </div>
                                 @endif
-                                <span class="absolute -bottom-1 -right-1 bg-slate-300 text-slate-800 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center border border-white">2</span>
+                                <span class="absolute -bottom-1 -right-1 bg-slate-300 text-slate-800 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center border border-white">{{ $second->computed_rank ?? 2 }}</span>
                             </div>
                             <p class="font-semibold text-xs text-[var(--color-text-main)] truncate max-w-full">{{ $second->user->name }}</p>
                             <span class="text-[11px] font-extrabold text-[var(--color-primary)] mt-0.5">
@@ -129,7 +129,7 @@
                                         {{ strtoupper(substr($first->user->name, 0, 2)) }}
                                     </div>
                                 @endif
-                                <span class="absolute -bottom-1 -right-1 bg-amber-400 text-slate-900 font-extrabold text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow">1</span>
+                                <span class="absolute -bottom-1 -right-1 bg-amber-400 text-slate-900 font-extrabold text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow">{{ $first->computed_rank ?? 1 }}</span>
                             </div>
                             <p class="font-bold text-xs text-[var(--color-text-main)] truncate max-w-full">{{ $first->user->name }}</p>
                             <span class="text-xs font-extrabold text-amber-600 dark:text-amber-400 mt-0.5">
@@ -153,7 +153,7 @@
                                         {{ strtoupper(substr($third->user->name, 0, 2)) }}
                                     </div>
                                 @endif
-                                <span class="absolute -bottom-1 -right-1 bg-amber-700 text-white font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center border border-white">3</span>
+                                <span class="absolute -bottom-1 -right-1 bg-amber-700 text-white font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center border border-white">{{ $third->computed_rank ?? 3 }}</span>
                             </div>
                             <p class="font-semibold text-xs text-[var(--color-text-main)] truncate max-w-full">{{ $third->user->name }}</p>
                             <span class="text-[11px] font-extrabold text-[var(--color-primary)] mt-0.5">
@@ -172,7 +172,7 @@
         <div class="space-y-2">
             @forelse($allRankings as $index => $item)
                 @php
-                    $rankNumber = $index + 1;
+                    $rankNumber = $item->computed_rank ?? ($index + 1);
                     $isMe = $student && $item->id === $student->id;
                     $pointsVal = $tab === 'monthly' ? $item->monthly_points : $item->total_points;
                 @endphp

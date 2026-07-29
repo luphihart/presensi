@@ -173,4 +173,65 @@ class LeaderboardTest extends TestCase
         $this->assertEquals(1, $student2->monthly_rank);
         $this->assertEquals(2, $this->student->monthly_rank);
     }
+
+    public function test_tied_rank_assignment(): void
+    {
+        $user2 = User::create([
+            'name' => 'Ahmad Tied',
+            'email' => 'ahmad@example.com',
+            'password' => bcrypt('password'),
+            'role' => UserRole::Student,
+        ]);
+        $student2 = Student::create([
+            'user_id' => $user2->id,
+            'class_room_id' => $this->classRoom->id,
+            'nis' => '12347',
+            'gender' => 'L',
+            'birth_date' => '2008-03-03',
+            'enrolled_at' => '2025-07-01',
+            'monthly_points' => 0,
+            'total_points' => 0,
+            'current_streak' => 0,
+            'is_active' => true,
+        ]);
+
+        $service = app(DisciplinePointService::class);
+        $service->recalculateRanks($this->classRoom->id);
+
+        $this->student->refresh();
+        $student2->refresh();
+
+        // Both have 0 points, 0 total, 0 streak, null check in -> tied for rank 1
+        $this->assertEquals(1, $this->student->monthly_rank);
+        $this->assertEquals(1, $student2->monthly_rank);
+    }
+
+    public function test_avg_check_in_seconds_uses_current_month_only(): void
+    {
+        // Check in last month at 10:00 (36000s)
+        Attendance::create([
+            'student_id' => $this->student->id,
+            'school_year_id' => $this->schoolYear->id,
+            'date' => Carbon::today()->subMonth()->toDateString(),
+            'status' => AttendanceStatus::Hadir,
+            'check_in_at' => Carbon::today()->subMonth()->setTime(10, 0, 0),
+        ]);
+
+        // Check in this month at 07:00 (25200s)
+        $attThisMonth = Attendance::create([
+            'student_id' => $this->student->id,
+            'school_year_id' => $this->schoolYear->id,
+            'date' => Carbon::today()->toDateString(),
+            'status' => AttendanceStatus::Hadir,
+            'check_in_at' => Carbon::today()->setTime(7, 0, 0),
+        ]);
+
+        $service = app(DisciplinePointService::class);
+        $service->syncAttendancePoints($this->student, $attThisMonth);
+
+        $this->student->refresh();
+
+        // Should be 07:00:00 = 25200s (ignoring last month's 10:00:00)
+        $this->assertEquals(25200, $this->student->avg_check_in_seconds);
+    }
 }

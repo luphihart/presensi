@@ -56,16 +56,28 @@ class Leaderboard extends Component
             return $leaderboardQuery->get();
         });
 
-        // Calculate current student rank dynamically based on current tab sorting
+        // Compute dynamic ranks considering ties
         $myRank = null;
-        if ($student) {
-            $rankCounter = 1;
-            foreach ($allRankings as $item) {
-                if ($item->id === $student->id) {
-                    $myRank = $rankCounter;
-                    break;
-                }
-                $rankCounter++;
+        $currentRank = 1;
+        $prevKey = null;
+
+        foreach ($allRankings as $index => $item) {
+            $primary = $this->tab === 'monthly' ? $item->monthly_points : $item->total_points;
+            $secondary = $this->tab === 'monthly' ? $item->total_points : $item->monthly_points;
+            $key = "{$primary}_{$secondary}_{$item->current_streak}_" . ($item->avg_check_in_seconds ?? 'null');
+
+            if ($prevKey !== null && $key === $prevKey) {
+                $assignedRank = $currentRank;
+            } else {
+                $assignedRank = $index + 1;
+                $currentRank = $assignedRank;
+            }
+            $prevKey = $key;
+
+            $item->computed_rank = $assignedRank;
+
+            if ($student && $item->id === $student->id) {
+                $myRank = $assignedRank;
             }
         }
 

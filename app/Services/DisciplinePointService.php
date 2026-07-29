@@ -151,9 +151,10 @@ class DisciplinePointService
             ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->sum('points');
 
-        // Calculate average check-in time of day in seconds past midnight (earliest check-in tie-breaker)
+        // Calculate average check-in time of day in seconds past midnight for current month (earliest check-in tie-breaker)
         $avgCheckInSeconds = null;
         $checkIns = Attendance::where('student_id', $student->id)
+            ->whereBetween('date', [$startOfMonth, $endOfMonth])
             ->whereNotNull('check_in_at')
             ->get();
 
@@ -171,6 +172,21 @@ class DisciplinePointService
             'monthly_points' => $monthlyPoints,
             'avg_check_in_seconds' => $avgCheckInSeconds,
         ]);
+
+        $this->clearLeaderboardCache($student->class_room_id);
+    }
+
+    /**
+     * Clear cached leaderboard data.
+     */
+    public function clearLeaderboardCache(?int $classRoomId = null): void
+    {
+        if ($classRoomId) {
+            \Illuminate\Support\Facades\Cache::forget("leaderboard_rankings_{$classRoomId}_monthly");
+            \Illuminate\Support\Facades\Cache::forget("leaderboard_rankings_{$classRoomId}_all_time");
+        }
+        \Illuminate\Support\Facades\Cache::forget("leaderboard_rankings_global_monthly");
+        \Illuminate\Support\Facades\Cache::forget("leaderboard_rankings_global_all_time");
     }
 
     /**
@@ -191,6 +207,7 @@ class DisciplinePointService
 
     /**
      * Recalculate monthly rankings for students in a class or all active students.
+     * Handles tied rankings appropriately.
      */
     public function recalculateRanks(?int $classRoomId = null): void
     {
@@ -211,15 +228,28 @@ class DisciplinePointService
                 ->orderBy('id')
                 ->get();
 
-            $rank = 1;
-            foreach ($studentsInClass as $st) {
-                $st->update(['monthly_rank' => $rank]);
+            $currentRank = 1;
+            $prevKey = null;
 
-                if ($rank === 1 && $st->monthly_points > 0) {
+            foreach ($studentsInClass as $index => $st) {
+                $key = "{$st->monthly_points}_{$st->total_points}_{$st->current_streak}_" . ($st->avg_check_in_seconds ?? 'null');
+
+                if ($prevKey !== null && $key === $prevKey) {
+                    $assignedRank = $currentRank;
+                } else {
+                    $assignedRank = $index + 1;
+                    $currentRank = $assignedRank;
+                }
+                $prevKey = $key;
+
+                $st->update(['monthly_rank' => $assignedRank]);
+
+                if ($assignedRank === 1 && $st->monthly_points > 0) {
                     $this->awardBadge($st, 'top_class');
                 }
-                $rank++;
             }
+
+            $this->clearLeaderboardCache($classId);
         }
     }
 
@@ -228,6 +258,8 @@ class DisciplinePointService
      */
     public function checkAndAwardBadges(Student $student): void
     {
+        $student->refresh();
+
         $attendancesCount = Attendance::where('student_id', $student->id)
             ->whereIn('status', [AttendanceStatus::Hadir->value, AttendanceStatus::Terlambat->value])
             ->count();
@@ -297,6 +329,8 @@ class DisciplinePointService
         Student::query()->update([
             'monthly_points' => 0,
             'monthly_rank' => null,
+            'avg_check_in_seconds' => null,
         ]);
+        $this->clearLeaderboardCache();
     }
 }
