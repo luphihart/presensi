@@ -1,17 +1,17 @@
-<div class="max-w-xl mx-auto space-y-6">
+<div class="space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-[var(--color-text)]">Ubah Password</h2>
-            <p class="text-sm text-[var(--color-text-muted)]">Perbarui kata sandi akun Anda secara berkala untuk menjaga keamanan</p>
+            <h2 class="text-xl font-bold text-[var(--color-text)]">Ubah Password</h2>
+            <p class="text-xs text-[var(--color-text-muted)]">Perbarui kata sandi akun Anda secara berkala untuk menjaga keamanan</p>
         </div>
-        <a href="{{ route('student.profile') }}" class="text-sm font-medium text-[var(--color-primary)] hover:underline flex items-center gap-1">
-            ← Kembali ke Profil
+        <a href="{{ route('student.profile') }}" class="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
+            ← Kembali
         </a>
     </div>
 
     @if ($successMessage)
-        <div class="p-4 rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-sm font-medium flex items-center justify-between">
+        <div class="p-4 rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-sm font-medium flex items-center justify-between">
             <span>✓ {{ $successMessage }}</span>
             <button type="button" wire:click="$set('successMessage', null)" class="text-emerald-500 hover:text-emerald-700">&times;</button>
         </div>
@@ -20,10 +20,10 @@
     <x-ui.card>
         <form wire:submit="changePassword" class="space-y-5" x-data="{ showPasswords: false }">
             <div>
-                <label class="block text-sm font-medium text-[var(--color-text)] mb-1">Password Saat Ini</label>
+                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Password Saat Ini</label>
                 <div class="relative">
                     <input :type="showPasswords ? 'text' : 'password'" wire:model="current_password"
-                        class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-sm">
+                        class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-xs">
                 </div>
                 @error('current_password')
                     <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span>
@@ -31,10 +31,10 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-[var(--color-text)] mb-1">Password Baru</label>
+                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Password Baru</label>
                 <div class="relative">
                     <input :type="showPasswords ? 'text' : 'password'" wire:model="password"
-                        class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-sm">
+                        class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-xs">
                 </div>
                 @error('password')
                     <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span>
@@ -42,10 +42,10 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-[var(--color-text)] mb-1">Konfirmasi Password Baru</label>
+                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Konfirmasi Password Baru</label>
                 <div class="relative">
                     <input :type="showPasswords ? 'text' : 'password'" wire:model="password_confirmation"
-                        class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-sm">
+                        class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-xs">
                 </div>
             </div>
 

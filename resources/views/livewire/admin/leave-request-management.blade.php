@@ -1,5 +1,5 @@
 <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h2 class="text-2xl font-bold text-[var(--color-text)]">Manajemen Pengajuan Izin</h2>
             <p class="text-sm text-[var(--color-text-muted)]">Persetujuan pengajuan izin dan sakit murid</p>
@@ -9,7 +9,7 @@
     <!-- Filter -->
     <x-ui.card class="p-4 flex flex-wrap items-center gap-3">
         <span class="text-xs font-semibold text-[var(--color-text-muted)] uppercase">Filter Status:</span>
-        <select wire:model.live="statusFilter" class="px-4 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+        <select wire:model.live="statusFilter" class="px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
             <option value="">Semua Status</option>
             <option value="pending">Menunggu (Pending)</option>
             <option value="approved">Disetujui (Approved)</option>
@@ -20,7 +20,7 @@
     <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-[var(--color-border)] text-[var(--color-text-muted)] uppercase font-semibold">
+                <thead class="bg-slate-50 dark:bg-slate-800/40 border-b border-[var(--color-border)] text-[var(--color-text-muted)] uppercase font-semibold">
                     <tr>
                         <th class="px-6 py-3.5">Tanggal</th>
                         <th class="px-6 py-3.5">Murid</th>
@@ -60,7 +60,7 @@
                                         <button wire:click="approve({{ $item->id }})" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-semibold text-xs hover:bg-emerald-700">
                                             Approve
                                         </button>
-                                        <button wire:click="reject({{ $item->id }})" type="button" class="px-3 py-1.5 rounded-xl bg-amber-600 text-white font-semibold text-xs hover:bg-amber-700">
+                                        <button wire:click="reject({{ $item->id }})" type="button" class="px-3 py-1.5 rounded-xl bg-rose-600 text-white font-semibold text-xs hover:bg-rose-700">
                                             Reject
                                         </button>
                                     @elseif($item->status->value === 'approved')

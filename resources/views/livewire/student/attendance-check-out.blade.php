@@ -31,7 +31,7 @@
             }
         }">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl {{ $isWithinGeofence ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600' }} flex items-center justify-center font-bold">
+                <div class="w-10 h-10 rounded-xl {{ $isWithinGeofence ? 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400' : 'bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400' }} flex items-center justify-center font-bold">
                     📍
                 </div>
                 <div>
@@ -91,7 +91,7 @@
                 </div>
             </template>
 
-            <div class="mt-4 flex space-x-3">
+            <div class="mt-4">
                 <template x-if="isCameraActive && !capturedImage">
                     <button @click="capture()" type="button" @if($errorMessage) disabled class="w-full py-3.5 rounded-2xl bg-slate-300 dark:bg-slate-700 text-slate-400 font-bold text-base cursor-not-allowed" @else class="w-full py-3.5 rounded-2xl bg-amber-500 text-white font-bold text-base shadow-lg shadow-amber-500/30" @endif>
                         📸 Ambil Foto Selfie
@@ -99,11 +99,11 @@
                 </template>
 
                 <template x-if="capturedImage">
-                    <div class="w-full flex space-x-3">
-                        <button @click="retake()" type="button" class="w-1/2 py-3 rounded-xl bg-slate-200 dark:bg-slate-700 text-[var(--color-text)] font-semibold text-sm">
+                    <div class="w-full flex flex-col sm:flex-row gap-3">
+                        <button @click="retake()" type="button" class="w-full sm:w-1/2 py-3 rounded-xl bg-slate-200 dark:bg-slate-700 text-[var(--color-text)] font-semibold text-sm">
                             Ulangi Foto
                         </button>
-                        <button wire:click="submitCheckOut" type="button" @if($errorMessage) disabled class="w-1/2 py-3 rounded-xl bg-slate-300 dark:bg-slate-700 text-slate-400 font-bold text-sm cursor-not-allowed" @else class="w-1/2 py-3 rounded-xl bg-amber-600 text-white font-bold text-sm shadow-md" @endif>
+                        <button wire:click="submitCheckOut" type="button" @if($errorMessage) disabled class="w-full sm:w-1/2 py-3 rounded-xl bg-slate-300 dark:bg-slate-700 text-slate-400 font-bold text-sm cursor-not-allowed" @else class="w-full sm:w-1/2 py-3 rounded-xl bg-amber-600 text-white font-bold text-sm shadow-md" @endif>
                             Kirim Presensi Pulang
                         </button>
                     </div>

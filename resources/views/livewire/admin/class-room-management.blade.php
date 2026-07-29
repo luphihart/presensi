@@ -1,11 +1,11 @@
 <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h2 class="text-2xl font-bold text-[var(--color-text)]">Pengaturan Kelas & Jurusan</h2>
             <p class="text-sm text-[var(--color-text-muted)]">Kelola daftar kelas dan konsentrasi jurusan per tahun ajaran</p>
         </div>
 
-        <button wire:click="openCreate" type="button" class="px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white text-sm font-semibold shadow-md">
+        <button wire:click="openCreate" type="button" class="px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white text-sm font-semibold shadow-md self-start sm:self-auto">
             + Tambah Kelas / Jurusan
         </button>
     </div>
@@ -71,7 +71,8 @@
                 <form wire:submit="save" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Tahun Ajaran</label>
-                        <select wire:model="schoolYearId" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                        <select wire:model="schoolYearId" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
+                            <option value="">-- Pilih Tahun Ajaran --</option>
                             @foreach($schoolYears as $year)
                                 <option value="{{ $year->id }}">{{ $year->name }} {{ $year->is_active ? '(Aktif)' : '' }}</option>
                             @endforeach
@@ -81,13 +82,13 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Nama Kelas</label>
-                        <input type="text" wire:model="name" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]" placeholder="Contoh: 10 RPL 1, 11 IPA 2">
+                        <input type="text" wire:model="name" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Contoh: 10 RPL 1, 11 IPA 2">
                         @error('name') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Nama Jurusan (Opsional)</label>
-                        <input type="text" wire:model="major" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]" placeholder="Contoh: Rekayasa Perangkat Lunak, IPA, IPS">
+                        <input type="text" wire:model="major" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Contoh: Rekayasa Perangkat Lunak, IPA, IPS">
                         <p class="text-[10px] text-[var(--color-text-muted)] mt-1">Kosongkan jika sekolah tidak memiliki penjurusan khusus.</p>
                         @error('major') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>

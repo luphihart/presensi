@@ -49,21 +49,21 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Tanggal Tidak Masuk</label>
-                    <input type="date" wire:model="date" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
-                    @error('date') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    <input type="date" wire:model="date" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
+                    @error('date') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Alasan / Keterangan</label>
-                    <textarea wire:model="reason" rows="3" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Jelaskan alasan pengajuan secara singkat..."></textarea>
-                    @error('reason') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    <textarea wire:model="reason" rows="3" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Jelaskan alasan pengajuan secara singkat..."></textarea>
+                    @error('reason') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Lampiran Bukti (Opsional)</label>
                     <input type="file" wire:model="attachment" class="w-full text-xs text-[var(--color-text-muted)] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[var(--color-primary-soft)] file:text-[var(--color-primary)] hover:file:opacity-90">
                     <p class="text-xs text-[var(--color-text-muted)] mt-1">Format: JPG, PNG, PDF (Maks. 2MB)</p>
-                    @error('attachment') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    @error('attachment') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <x-ui.button type="submit" variant="primary" size="lg" class="w-full">

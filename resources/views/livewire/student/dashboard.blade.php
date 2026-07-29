@@ -232,9 +232,9 @@
     <!-- Announcements Section (Tampil di bawah shortcut) -->
     @if(count($announcements) > 0)
         <div class="rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm">
-            <!-- Header dengan gradient (inline style untuk kompatibilitas) -->
-            <div style="background: linear-gradient(to right, #6366f1, #a855f7);" class="px-4 py-3">
-                <h3 style="color: white; font-weight: 700; font-size: 0.875rem; letter-spacing: 0.025em;">Pengumuman Sekolah</h3>
+            <!-- Header dengan gradient -->
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3">
+                <h3 class="text-white font-bold text-xs uppercase tracking-wider">Pengumuman Sekolah</h3>
             </div>
 
             <!-- Daftar pengumuman -->
@@ -243,16 +243,15 @@
                     <div class="px-4 py-3.5 space-y-1.5">
                         <!-- Judul + badge tanggal -->
                         <div class="flex items-start justify-between gap-2">
-                            <h4 class="font-bold text-sm leading-snug line-clamp-1 flex-1" style="color: var(--color-text);">
+                            <h4 class="font-bold text-sm leading-snug line-clamp-1 flex-1 text-[var(--color-text)]">
                                 {{ $announcement->title }}
                             </h4>
-                            <span class="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5"
-                                  style="background: rgba(99,102,241,0.12); color: #6366f1; border: 1px solid rgba(99,102,241,0.2);">
+                            <span class="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
                                 {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMM') : '' }}
                             </span>
                         </div>
                         <!-- Preview isi — hanya 2 baris -->
-                        <p class="text-xs line-clamp-2 leading-relaxed" style="color: var(--color-text-muted);">
+                        <p class="text-xs line-clamp-2 leading-relaxed text-[var(--color-text-muted)]">
                             {{ $announcement->content }}
                         </p>
                     </div>
@@ -261,10 +260,7 @@
 
             <!-- Tombol Baca Selengkapnya -->
             <a href="{{ route('student.announcements') }}"
-               class="flex items-center justify-center gap-1.5 w-full py-3 border-t border-[var(--color-border)] transition-colors"
-               style="background: var(--color-bg); color: #6366f1; font-size: 0.75rem; font-weight: 700;"
-               onmouseover="this.style.background='rgba(99,102,241,0.06)'"
-               onmouseout="this.style.background='var(--color-bg)'">
+               class="flex items-center justify-center gap-1.5 w-full py-3 border-t border-[var(--color-border)] bg-[var(--color-bg)] hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 text-[var(--color-primary)] text-xs font-bold transition-colors">
                 Baca Selengkapnya
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>

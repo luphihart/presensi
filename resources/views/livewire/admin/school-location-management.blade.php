@@ -32,11 +32,11 @@
                     </div>
 
                     <div class="flex items-center space-x-2">
-                        <button wire:click="openEdit({{ $loc->id }})" type="button" class="text-xs font-semibold text-[var(--color-primary)] hover:underline">
-                            Edit
+                        <button wire:click="openEdit({{ $loc->id }})" type="button" title="Edit Lokasi" class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-[var(--color-primary)] hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </button>
-                        <button wire:click="delete({{ $loc->id }})" wire:confirm="Hapus lokasi ini?" type="button" class="text-xs font-semibold text-rose-600 hover:underline">
-                            Hapus
+                        <button wire:click="delete({{ $loc->id }})" wire:confirm="Hapus lokasi ini?" type="button" title="Hapus Lokasi" class="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
     @if($showForm)
         <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
                     <h3 class="font-bold text-lg text-[var(--color-text)]">{{ $locationId ? 'Edit Titik Lokasi' : 'Tambah Titik Lokasi Baru' }}</h3>
                     <button wire:click="$set('showForm', false)" type="button" class="text-slate-400 hover:text-slate-600">✕</button>
                 </div>
@@ -76,7 +76,7 @@
                 <form wire:submit="save" class="space-y-4">
                     <div>
                         <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Nama Lokasi / Gerbang</label>
-                        <input type="text" wire:model="name" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]" placeholder="Contoh: Gerbang Utama Sekolah">
+                        <input type="text" wire:model="name" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Contoh: Gerbang Utama Sekolah">
                         @error('name') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -92,13 +92,13 @@
                     }">
                         <div>
                             <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Latitude</label>
-                            <input type="text" wire:model="latitude" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]" placeholder="-6.200000">
+                            <input type="text" wire:model="latitude" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="-6.200000">
                             @error('latitude') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Longitude</label>
-                            <input type="text" wire:model="longitude" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]" placeholder="106.816666">
+                            <input type="text" wire:model="longitude" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="106.816666">
                             @error('longitude') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -111,7 +111,7 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Radius Toleransi Geofence (Meter)</label>
-                        <input type="number" wire:model="radiusMeters" min="10" max="5000" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                        <input type="number" wire:model="radiusMeters" min="10" max="5000" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
                         <p class="text-[10px] text-[var(--color-text-muted)] mt-1">Presensi murid hanya valid jika berada dalam radius ini dari titik koordinat.</p>
                         @error('radiusMeters') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>

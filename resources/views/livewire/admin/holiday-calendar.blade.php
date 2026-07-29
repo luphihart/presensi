@@ -1,7 +1,7 @@
 <div class="space-y-6">
     <div>
         <h2 class="text-2xl font-bold text-[var(--color-text)]">Kalender Libur & Tanggal Merah</h2>
-        <p class="text-sm text-[var(--color-text-muted)] font-medium">Kelola tanggal merah nasional dan hari libur internal sekolah</p>
+        <p class="text-sm text-[var(--color-text-muted)]">Kelola tanggal merah nasional dan hari libur internal sekolah</p>
     </div>
 
     @if($successMessage)
@@ -27,19 +27,19 @@
             <form wire:submit="addHoliday" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Tanggal</label>
-                    <input type="date" wire:model="date" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                    <input type="date" wire:model="date" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
                     @error('date') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Nama / Keterangan Libur</label>
-                    <input type="text" wire:model="name" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]" placeholder="Contoh: Hari Kemerdekaan">
+                    <input type="text" wire:model="name" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Contoh: Hari Kemerdekaan">
                     @error('name') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Kategori Libur</label>
-                    <select wire:model="type" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                    <select wire:model="type" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
                         <option value="school">Libur Khusus Sekolah</option>
                         <option value="national">Tanggal Merah Nasional</option>
                     </select>
@@ -64,28 +64,28 @@
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-[var(--color-border)] text-[var(--color-text-muted)] uppercase">
+                    <thead class="bg-slate-50 dark:bg-slate-800/40 border-b border-[var(--color-border)] text-[var(--color-text-muted)] font-semibold uppercase">
                         <tr>
-                            <th class="px-4 py-3">Tanggal</th>
-                            <th class="px-4 py-3">Nama Libur</th>
-                            <th class="px-4 py-3">Kategori</th>
-                            <th class="px-4 py-3 text-center">Aksi</th>
+                            <th class="px-6 py-3.5">Tanggal</th>
+                            <th class="px-6 py-3.5">Nama Libur</th>
+                            <th class="px-6 py-3.5">Kategori</th>
+                            <th class="px-6 py-3.5 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[var(--color-border)] text-[var(--color-text)]">
                         @forelse($holidays as $h)
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 {{ $editingId === $h->id ? 'bg-amber-50/50 dark:bg-amber-950/20' : '' }}">
-                                <td class="px-4 py-3 font-semibold whitespace-nowrap">{{ $h->date->locale('id')->isoFormat('D MMMM YYYY') }}</td>
-                                <td class="px-4 py-3 font-bold">{{ $h->name }}</td>
-                                <td class="px-4 py-3">
+                                <td class="px-6 py-4 font-semibold whitespace-nowrap">{{ $h->date->locale('id')->isoFormat('D MMMM YYYY') }}</td>
+                                <td class="px-6 py-4 font-bold">{{ $h->name }}</td>
+                                <td class="px-6 py-4">
                                     <x-ui.badge :type="$h->type === 'national' ? 'danger' : 'info'" :value="$h->type === 'national' ? 'Nasional' : 'Sekolah'" />
                                 </td>
-                                <td class="px-4 py-3 text-center">
-                                    <div class="flex items-center justify-center space-x-1">
-                                        <button wire:click="editHoliday({{ $h->id }})" type="button" class="p-1.5 rounded-lg text-amber-600 hover:bg-amber-100 dark:hover:bg-amber-950/60 transition-all" title="Edit Hari Libur">
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <button wire:click="editHoliday({{ $h->id }})" type="button" class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-[var(--color-primary)] hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-all" title="Edit Hari Libur">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                         </button>
-                                        <button wire:click="deleteHoliday({{ $h->id }})" wire:confirm="Hapus hari libur '{{ addslashes($h->name) }}'?" type="button" class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-950/60 transition-all" title="Hapus Hari Libur">
+                                        <button wire:click="deleteHoliday({{ $h->id }})" wire:confirm="Hapus hari libur '{{ addslashes($h->name) }}'?" type="button" class="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all" title="Hapus Hari Libur">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </button>
                                     </div>
@@ -93,7 +93,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-6 text-center text-[var(--color-text-muted)]">Belum ada hari libur terdaftar.</td>
+                                <td colspan="4" class="px-6 py-8 text-center text-[var(--color-text-muted)]">Belum ada hari libur terdaftar.</td>
                             </tr>
                         @endforelse
                     </tbody>

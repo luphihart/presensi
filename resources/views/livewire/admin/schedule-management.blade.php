@@ -24,18 +24,18 @@
 
                         <div class="flex-1 grid grid-cols-3 gap-3">
                             <div>
-                                <label class="block text-[10px] font-semibold text-[var(--color-text-muted)] uppercase mb-1">Jam Masuk</label>
-                                <input type="time" wire:model="schedulesData.{{ $day }}.check_in_time" class="w-full px-3 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Jam Masuk</label>
+                                <input type="time" wire:model="schedulesData.{{ $day }}.check_in_time" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
                             </div>
 
                             <div>
-                                <label class="block text-[10px] font-semibold text-[var(--color-text-muted)] uppercase mb-1">Toleransi (Mnt)</label>
-                                <input type="number" wire:model="schedulesData.{{ $day }}.check_in_tolerance_minutes" min="0" max="60" class="w-full px-3 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Toleransi (Mnt)</label>
+                                <input type="number" wire:model="schedulesData.{{ $day }}.check_in_tolerance_minutes" min="0" max="60" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
                             </div>
 
                             <div>
-                                <label class="block text-[10px] font-semibold text-[var(--color-text-muted)] uppercase mb-1">Jam Pulang</label>
-                                <input type="time" wire:model="schedulesData.{{ $day }}.check_out_time" class="w-full px-3 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Jam Pulang</label>
+                                <input type="time" wire:model="schedulesData.{{ $day }}.check_out_time" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
                             </div>
                         </div>
                     </div>

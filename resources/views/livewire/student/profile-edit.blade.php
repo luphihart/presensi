@@ -27,12 +27,12 @@
                 <label for="photo_input" class="cursor-pointer text-xs font-semibold text-[var(--color-primary)] bg-[var(--color-primary-soft)] px-4 py-2 rounded-xl">
                     Ganti Foto Profil
                 </label>
-                @error('photo') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                @error('photo') <span class="text-xs text-rose-500">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Nama Lengkap</label>
-                <div class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]/50 text-[var(--color-text)] flex items-center justify-between opacity-75 cursor-not-allowed select-none">
+                <div class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)]/50 text-xs text-[var(--color-text)] flex items-center justify-between opacity-75 cursor-not-allowed select-none">
                     <span class="font-medium">{{ $name }}</span>
                     <span class="flex items-center space-x-1 text-[var(--color-text-muted)] text-xs">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
@@ -44,14 +44,14 @@
 
             <div>
                 <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Nomor HP / WhatsApp</label>
-                <input type="text" wire:model="phone" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="081234567890">
-                @error('phone') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                <input type="text" wire:model="phone" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="081234567890">
+                @error('phone') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-[var(--color-text)] uppercase tracking-wider mb-1.5">Alamat Tempat Tinggal</label>
-                <textarea wire:model="address" rows="2" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none"></textarea>
-                @error('address') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                <textarea wire:model="address" rows="2" class="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none"></textarea>
+                @error('address') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
             </div>
 
             <div>

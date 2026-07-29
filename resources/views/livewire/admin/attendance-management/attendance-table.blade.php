@@ -146,11 +146,14 @@
     @if($showCorrectionModal)
         <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
-                <h3 class="font-bold text-lg text-[var(--color-text)]">Koreksi Manual Presensi</h3>
+                <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
+                    <h3 class="font-bold text-lg text-[var(--color-text)]">Koreksi Manual Presensi</h3>
+                    <button wire:click="$set('showCorrectionModal', false)" type="button" class="text-slate-400 hover:text-slate-600">✕</button>
+                </div>
                 
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Status Baru</label>
-                    <select wire:model="correctionStatus" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]">
+                    <select wire:model="correctionStatus" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
                         <option value="hadir">Hadir</option>
                         <option value="terlambat">Terlambat</option>
                         <option value="izin">Izin</option>
@@ -161,7 +164,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Alasan Koreksi (Audit Log)</label>
-                    <textarea wire:model="correctionReason" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)]" placeholder="Wajib diisi alasan mengubah status..."></textarea>
+                    <textarea wire:model="correctionReason" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Wajib diisi alasan mengubah status..."></textarea>
                     @error('correctionReason') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                 </div>
 

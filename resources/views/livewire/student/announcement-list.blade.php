@@ -2,10 +2,10 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-[var(--color-text)]">Pengumuman Sekolah</h2>
-            <p class="text-sm text-[var(--color-text-muted)]">Informasi dan pengumuman resmi dari pihak sekolah</p>
+            <h2 class="text-xl font-bold text-[var(--color-text)]">Pengumuman Sekolah</h2>
+            <p class="text-xs text-[var(--color-text-muted)]">Informasi dan pengumuman resmi dari pihak sekolah</p>
         </div>
-        <a href="{{ route('student.dashboard') }}" class="text-xs font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
+        <a href="{{ route('student.dashboard') }}" class="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
             ← Kembali
         </a>
     </div>
@@ -13,7 +13,7 @@
     <!-- Announcement Cards -->
     <div class="space-y-4">
         @forelse($announcements as $announcement)
-            <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 shadow-sm space-y-3">
+            <x-ui.card class="p-5 space-y-3">
                 <div class="flex items-start justify-between gap-3">
                     <div class="flex items-center space-x-2">
                         <span class="text-lg">📢</span>
@@ -27,13 +27,13 @@
                 <div class="text-sm text-[var(--color-text)] whitespace-pre-line leading-relaxed pl-7">
                     {{ $announcement->content }}
                 </div>
-            </div>
+            </x-ui.card>
         @empty
-            <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-8 text-center space-y-2">
+            <x-ui.card class="p-8 text-center space-y-2">
                 <span class="text-4xl block mb-2">📭</span>
                 <p class="font-bold text-[var(--color-text)] text-sm">Belum Ada Pengumuman</p>
                 <p class="text-xs text-[var(--color-text-muted)]">Saat ini belum ada pengumuman resmi terbaru dari sekolah.</p>
-            </div>
+            </x-ui.card>
         @endforelse
     </div>
 

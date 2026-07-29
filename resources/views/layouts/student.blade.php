@@ -56,7 +56,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.761 1.761 0 013 12c0-.663.364-1.24.908-1.543l3.526-1.958"/></svg>
                 <span>Pengumuman</span>
             </a>
-            <a href="{{ route('student.profile') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium {{ request()->routeIs('student.profile') ? 'bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-semibold' : 'text-[var(--color-text-muted)] hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+            <a href="{{ route('student.profile') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium {{ request()->routeIs('student.profile', 'student.password') ? 'bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-semibold' : 'text-[var(--color-text-muted)] hover:bg-slate-100 dark:hover:bg-slate-800' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 <span>Profil</span>
             </a>
@@ -86,7 +86,7 @@
             <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             <span>Riwayat</span>
         </a>
-        <a href="{{ route('student.profile') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('student.profile') ? 'text-[var(--color-primary)] font-semibold' : 'text-[var(--color-text-muted)]' }}">
+        <a href="{{ route('student.profile') }}" class="flex flex-col items-center text-xs {{ request()->routeIs('student.profile', 'student.password') ? 'text-[var(--color-primary)] font-semibold' : 'text-[var(--color-text-muted)]' }}">
             <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span>Profil</span>
         </a>
