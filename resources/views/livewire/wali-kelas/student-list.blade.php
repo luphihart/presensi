@@ -20,7 +20,9 @@
         <x-ui.card class="p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <div class="relative flex-1 max-w-md">
                 <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari nama atau NIS murid..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
-                <svg class="w-4 h-4 absolute left-3 top-3.5 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--color-text-muted)]">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </div>
             </div>
             <div class="text-xs text-[var(--color-text-muted)] font-medium flex items-center space-x-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
@@ -49,7 +51,7 @@
                                 <td class="px-6 py-4 font-mono font-semibold">{{ $student->nis ?? '-' }}</td>
                                 <td class="px-6 py-4 font-bold">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold flex items-center justify-center text-xs shadow-sm">
+                                        <div class="w-8 h-8 rounded-full bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-bold flex items-center justify-center text-xs">
                                             {{ strtoupper(substr($student->user->name ?? 'M', 0, 1)) }}
                                         </div>
                                         <span>{{ $student->user->name ?? '-' }}</span>
@@ -70,7 +72,7 @@
                                     @php
                                         $streak = $student->current_streak;
                                         $badgeClass = match(true) {
-                                            $streak >= 10 => 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-sm',
+                                            $streak >= 10 => 'bg-amber-500 text-white shadow-sm',
                                             $streak >= 5 => 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800',
                                             $streak > 0 => 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300',
                                             default => 'bg-slate-100 dark:bg-slate-800 text-slate-400'
