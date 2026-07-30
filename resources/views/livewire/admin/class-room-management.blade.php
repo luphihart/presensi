@@ -47,9 +47,15 @@
                     </div>
                 </div>
 
-                <div class="pt-2 border-t border-[var(--color-border)] flex items-center justify-between text-xs text-[var(--color-text-muted)]">
-                    <span>👥 Total Murid</span>
-                    <strong class="text-[var(--color-text)] font-semibold">{{ $class->students_count }} Murid</strong>
+                <div class="pt-2 border-t border-[var(--color-border)] flex flex-col space-y-1.5 text-xs text-[var(--color-text-muted)]">
+                    <div class="flex items-center justify-between">
+                        <span>👨‍🏫 Wali Kelas</span>
+                        <strong class="text-[var(--color-text)] font-semibold">{{ $class->waliKelas ? $class->waliKelas->name : 'Belum di-assign' }}</strong>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>👥 Total Murid</span>
+                        <strong class="text-[var(--color-text)] font-semibold">{{ $class->students_count }} Murid</strong>
+                    </div>
                 </div>
             </x-ui.card>
         @empty
@@ -91,6 +97,17 @@
                         <input type="text" wire:model="major" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none" placeholder="Contoh: Rekayasa Perangkat Lunak, IPA, IPS">
                         <p class="text-[10px] text-[var(--color-text-muted)] mt-1">Kosongkan jika sekolah tidak memiliki penjurusan khusus.</p>
                         @error('major') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Wali Kelas (Opsional)</label>
+                        <select wire:model="waliKelasId" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
+                            <option value="">-- Belum Ada Wali Kelas --</option>
+                            @foreach($waliKelasList as $wk)
+                                <option value="{{ $wk->id }}">{{ $wk->name }} (NIP: {{ $wk->nip ?? '-' }})</option>
+                            @endforeach
+                        </select>
+                        @error('waliKelasId') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="flex space-x-3 pt-3 border-t border-[var(--color-border)]">

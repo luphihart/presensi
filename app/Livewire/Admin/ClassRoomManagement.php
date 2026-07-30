@@ -23,6 +23,9 @@ class ClassRoomManagement extends Component
     #[Validate('required|exists:school_years,id')]
     public ?int $schoolYearId = null;
 
+    #[Validate('nullable|exists:users,id')]
+    public ?int $waliKelasId = null;
+
     public ?string $successMessage = null;
     public ?string $errorMessage = null;
 
@@ -34,7 +37,7 @@ class ClassRoomManagement extends Component
 
     public function openCreate(): void
     {
-        $this->reset(['classRoomId', 'name', 'major', 'errorMessage']);
+        $this->reset(['classRoomId', 'name', 'major', 'waliKelasId', 'errorMessage']);
         $activeYear = SchoolYear::getActive();
         $this->schoolYearId = $activeYear?->id ?? SchoolYear::first()?->id;
         $this->showFormModal = true;
@@ -49,6 +52,7 @@ class ClassRoomManagement extends Component
             $this->name = $class->name;
             $this->major = $class->major ?? '';
             $this->schoolYearId = $class->school_year_id;
+            $this->waliKelasId = $class->wali_kelas_id;
             $this->showFormModal = true;
         }
     }
@@ -57,12 +61,24 @@ class ClassRoomManagement extends Component
     {
         $this->validate();
 
+        // Check if wali_kelas_id is already assigned to another class
+        if ($this->waliKelasId) {
+            $alreadyAssigned = ClassRoom::where('wali_kelas_id', $this->waliKelasId)
+                ->where('id', '!=', $this->classRoomId)
+                ->first();
+            if ($alreadyAssigned) {
+                $this->errorMessage = "Wali Kelas ini sudah di-assign ke kelas {$alreadyAssigned->name}. Satu wali kelas hanya dapat mengampu 1 kelas.";
+                return;
+            }
+        }
+
         ClassRoom::updateOrCreate(
             ['id' => $this->classRoomId],
             [
                 'school_year_id' => $this->schoolYearId,
                 'name' => $this->name,
                 'major' => $this->major,
+                'wali_kelas_id' => $this->waliKelasId ?: null,
             ]
         );
 
@@ -86,7 +102,8 @@ class ClassRoomManagement extends Component
     public function render()
     {
         $schoolYears = SchoolYear::all();
-        $classRooms = ClassRoom::with(['schoolYear'])->withCount('students')->latest()->get();
+        $classRooms = ClassRoom::with(['schoolYear', 'waliKelas'])->withCount('students')->latest()->get();
+        $waliKelasList = \App\Models\User::where('role', \App\Enums\UserRole::WaliKelas)->orderBy('name')->get();
 
         // Unique majors for summary
         $majors = ClassRoom::whereNotNull('major')->where('major', '!=', '')->pluck('major')->unique();
@@ -95,6 +112,7 @@ class ClassRoomManagement extends Component
             'classRooms' => $classRooms,
             'schoolYears' => $schoolYears,
             'majors' => $majors,
+            'waliKelasList' => $waliKelasList,
         ]);
     }
 }

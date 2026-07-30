@@ -17,6 +17,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nip',
         'password',
         'role',
         'theme_preference',
@@ -45,6 +46,11 @@ class User extends Authenticatable
         return $this->hasOne(Student::class);
     }
 
+    public function homeroomClass(): HasOne
+    {
+        return $this->hasOne(ClassRoom::class, 'wali_kelas_id');
+    }
+
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class);
@@ -63,5 +69,10 @@ class User extends Authenticatable
     public function isStudent(): bool
     {
         return $this->role === UserRole::Student;
+    }
+
+    public function isWaliKelas(): bool
+    {
+        return $this->role === UserRole::WaliKelas;
     }
 }

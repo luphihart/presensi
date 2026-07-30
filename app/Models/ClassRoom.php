@@ -14,6 +14,7 @@ class ClassRoom extends Model
 
     protected $fillable = [
         'school_year_id',
+        'wali_kelas_id',
         'name',
         'major',
     ];
@@ -21,6 +22,11 @@ class ClassRoom extends Model
     public function schoolYear(): BelongsTo
     {
         return $this->belongsTo(SchoolYear::class);
+    }
+
+    public function waliKelas(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'wali_kelas_id');
     }
 
     public function students(): HasMany

@@ -21,15 +21,35 @@ use App\Livewire\Admin\ScheduleManagement;
 use App\Livewire\Admin\HolidayCalendar;
 use App\Livewire\Admin\ReportGenerator;
 use App\Livewire\Admin\SchoolSettings;
+use App\Livewire\Admin\WaliKelasManagement;
+use App\Livewire\Admin\ChangePassword as AdminChangePassword;
+use App\Livewire\Admin\AnnouncementManagement;
+
+use App\Livewire\Student\ChangePassword as StudentChangePassword;
+use App\Livewire\Student\AnnouncementList as StudentAnnouncementList;
+use App\Livewire\Student\Leaderboard as StudentLeaderboard;
+
+use App\Livewire\WaliKelas\Dashboard as WaliKelasDashboard;
+use App\Livewire\WaliKelas\StudentList as WaliKelasStudentList;
+use App\Livewire\WaliKelas\AttendanceTable as WaliKelasAttendanceTable;
+use App\Livewire\WaliKelas\LeaveRequests as WaliKelasLeaveRequests;
+use App\Livewire\WaliKelas\Report as WaliKelasReport;
+use App\Livewire\WaliKelas\ChangePassword as WaliKelasChangePassword;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Redirect root to dashboard or login
 Route::get('/', function () {
     if (Auth::check()) {
-        return Auth::user()->role === UserRole::Admin
-            ? redirect()->route('admin.dashboard')
-            : redirect()->route('student.dashboard');
+        $user = Auth::user();
+        if ($user->role === UserRole::Admin) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === UserRole::WaliKelas) {
+            return redirect()->route('wali_kelas.dashboard');
+        } else {
+            return redirect()->route('student.dashboard');
+        }
     }
     return redirect()->route('login');
 });
@@ -46,12 +66,6 @@ Route::post('/logout', function () {
     session()->regenerateToken();
     return redirect()->route('login');
 })->middleware('auth')->name('logout');
-
-use App\Livewire\Student\ChangePassword as StudentChangePassword;
-use App\Livewire\Student\AnnouncementList as StudentAnnouncementList;
-use App\Livewire\Student\Leaderboard as StudentLeaderboard;
-use App\Livewire\Admin\ChangePassword as AdminChangePassword;
-use App\Livewire\Admin\AnnouncementManagement;
 
 // Student Routes
 Route::middleware(['auth', 'student'])->prefix('student')->name('student.')->group(function () {
@@ -73,6 +87,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/students/create', StudentForm::class)->name('students.create');
     Route::get('/students/edit/{id}', StudentForm::class)->name('students.edit');
     Route::get('/students/import', StudentImport::class)->name('students.import');
+    Route::get('/wali-kelas', WaliKelasManagement::class)->name('wali-kelas.index');
     Route::get('/classes', ClassRoomManagement::class)->name('classes.index');
     Route::get('/attendance', AttendanceTable::class)->name('attendance.index');
     Route::get('/leave-requests', LeaveRequestManagement::class)->name('leave-requests.index');
@@ -83,4 +98,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/settings', SchoolSettings::class)->name('settings.index');
     Route::get('/password', AdminChangePassword::class)->name('password');
     Route::get('/announcements', AnnouncementManagement::class)->name('announcements.index');
+});
+
+// Wali Kelas Routes
+Route::middleware(['auth', 'wali_kelas'])->prefix('wali-kelas')->name('wali_kelas.')->group(function () {
+    Route::get('/dashboard', WaliKelasDashboard::class)->name('dashboard');
+    Route::get('/students', WaliKelasStudentList::class)->name('students');
+    Route::get('/attendance', WaliKelasAttendanceTable::class)->name('attendance');
+    Route::get('/leave-requests', WaliKelasLeaveRequests::class)->name('leave-requests');
+    Route::get('/reports', WaliKelasReport::class)->name('reports');
+    Route::get('/password', WaliKelasChangePassword::class)->name('password');
 });

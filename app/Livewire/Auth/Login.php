@@ -37,6 +37,8 @@ class Login extends Component
 
             if ($user->role === UserRole::Admin) {
                 $this->redirectRoute('admin.dashboard');
+            } elseif ($user->role === UserRole::WaliKelas) {
+                $this->redirectRoute('wali_kelas.dashboard');
             } else {
                 $this->redirectRoute('student.dashboard');
             }
