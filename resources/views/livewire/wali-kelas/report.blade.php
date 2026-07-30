@@ -11,39 +11,51 @@
                 <p class="text-sm text-[var(--color-text-muted)]">Pratinjau matriks presensi bulanan murid kelas yang Anda ampu & unduh Excel</p>
             </div>
 
-            <button wire:click="exportExcel" type="button" class="px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-semibold text-sm shadow-md flex items-center justify-center space-x-2 hover:opacity-90 transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                <span>Download Excel Matriks (.xlsx)</span>
+            <button wire:click="exportExcel" type="button" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-xs shadow-md shadow-emerald-500/20 flex items-center justify-center space-x-2 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 01-2-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span>Unduh Excel Matriks (.xlsx)</span>
             </button>
         </div>
 
-        <!-- Filter Card -->
+        <!-- Filter & Info Banner Card -->
         <x-ui.card class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
             <div>
-                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Pilih Bulan & Tahun</label>
-                <input type="month" wire:model.live="month" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none">
+                <label class="block text-xs font-semibold text-[var(--color-text)] uppercase mb-1">Pilih Bulan & Tahun:</label>
+                <input type="month" wire:model.live="month" class="w-full px-4 py-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] text-xs text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none font-semibold">
             </div>
 
-            <div class="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-700 dark:text-emerald-300">
-                📊 Ekspor laporan kelas <strong>{{ $classRoom->name }}</strong> dalam format <strong>Excel (.xlsx)</strong> lengkap dengan matriks tanggal.
+            <div class="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/20 text-xs text-emerald-800 dark:text-emerald-300">
+                📊 Rekap matriks kehadiran murid kelas <strong>{{ $classRoom->name }}</strong> untuk bulan <strong>{{ \Carbon\Carbon::parse(($reportData['yearMonth'] ?? now()->format('Y-m')) . '-01')->locale('id')->isoFormat('MMMM YYYY') }}</strong>.
             </div>
         </x-ui.card>
 
+        <!-- Status Legend Card -->
+        <div class="p-3 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] flex flex-wrap items-center justify-between gap-3 text-xs">
+            <span class="font-bold text-[var(--color-text-muted)] uppercase text-[10px]">Keterangan Matriks:</span>
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-bold text-[11px]">H = Hadir Tepat Waktu</span>
+                <span class="px-2.5 py-1 rounded-lg bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 font-bold text-[11px]">T = Terlambat</span>
+                <span class="px-2.5 py-1 rounded-lg bg-sky-100 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 font-bold text-[11px]">I = Izin</span>
+                <span class="px-2.5 py-1 rounded-lg bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 font-bold text-[11px]">S = Sakit</span>
+                <span class="px-2.5 py-1 rounded-lg bg-rose-100 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 font-bold text-[11px]">A = Alpa</span>
+            </div>
+        </div>
+
         <!-- Matrix Table -->
-        <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm">
+        <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl overflow-hidden shadow-sm">
             <div class="p-4 border-b border-[var(--color-border)] flex items-center justify-between">
                 <h3 class="font-bold text-sm text-[var(--color-text)]">
                     Matriks Presensi Kelas {{ $classRoom->name }} — {{ \Carbon\Carbon::parse(($reportData['yearMonth'] ?? now()->format('Y-m')) . '-01')->locale('id')->isoFormat('MMMM YYYY') }}
                 </h3>
-                <span class="text-xs text-[var(--color-text-muted)]">Geser ke kanan untuk melihat rincian tanggal ➔</span>
+                <span class="text-xs text-[var(--color-text-muted)] hidden sm:inline">Geser tabel ke kanan untuk melihat rincian tanggal ➔</span>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-[11px]">
                     <thead>
-                        <tr class="border-b border-[var(--color-border)] font-semibold text-[var(--color-text-muted)] uppercase bg-slate-50 dark:bg-slate-800/40">
-                            <th class="px-3 py-3 border-r border-[var(--color-border)] text-center w-8 bg-slate-50 dark:bg-slate-800 sticky left-0 z-20">No</th>
-                            <th class="px-4 py-3 border-r border-[var(--color-border)] min-w-[140px] bg-slate-50 dark:bg-slate-800 sticky left-[33px] z-20 shadow-r">Nama Murid</th>
+                        <tr class="border-b border-[var(--color-border)] font-semibold text-[var(--color-text-muted)] uppercase bg-slate-50 dark:bg-slate-900/50">
+                            <th class="px-3 py-3 border-r border-[var(--color-border)] text-center w-8 bg-slate-50 dark:bg-slate-900 sticky left-0 z-20">No</th>
+                            <th class="px-4 py-3 border-r border-[var(--color-border)] min-w-[140px] bg-slate-50 dark:bg-slate-900 sticky left-[33px] z-20 shadow-r">Nama Murid</th>
                             <th class="px-3 py-3 border-r border-[var(--color-border)] min-w-[80px]">NIS</th>
                             <th class="px-2 py-3 border-r border-[var(--color-border)] text-center text-emerald-600 dark:text-emerald-400">H</th>
                             <th class="px-2 py-3 border-r border-[var(--color-border)] text-center text-amber-600 dark:text-amber-400">T</th>
@@ -65,7 +77,7 @@
                             <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
                                 <td class="px-3 py-2 border-r border-[var(--color-border)] text-center font-mono bg-[var(--color-surface)] sticky left-0 z-10">{{ $index + 1 }}</td>
                                 <td class="px-4 py-2 border-r border-[var(--color-border)] font-bold text-xs truncate max-w-[160px] bg-[var(--color-surface)] sticky left-[33px] z-10 shadow-r">{{ $row['student']->user->name }}</td>
-                                <td class="px-3 py-2 border-r border-[var(--color-border)] font-mono text-[10px]">{{ $row['student']->nis ?? '-' }}</td>
+                                <td class="px-3 py-2 border-r border-[var(--color-border)] font-mono text-[10px] text-[var(--color-text-muted)]">{{ $row['student']->nis ?? '-' }}</td>
                                 <td class="px-2 py-2 border-r border-[var(--color-border)] text-center font-bold text-emerald-600 dark:text-emerald-400">{{ $row['summary']['hadir'] }}</td>
                                 <td class="px-2 py-2 border-r border-[var(--color-border)] text-center font-bold text-amber-600 dark:text-amber-400">{{ $row['summary']['terlambat'] }}</td>
                                 <td class="px-2 py-2 border-r border-[var(--color-border)] text-center font-bold text-sky-600 dark:text-sky-400">{{ $row['summary']['izin'] }}</td>
@@ -98,8 +110,9 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ 9 + count($reportData['days']) }}" class="px-6 py-12 text-center text-[var(--color-text-muted)]">
-                                    Belum ada data murid atau presensi di kelas ini untuk bulan ini.
+                                <td colspan="{{ 9 + count($reportData['days']) }}" class="px-6 py-12 text-center text-[var(--color-text-muted)] space-y-2">
+                                    <span class="text-3xl block opacity-50">📊</span>
+                                    <p class="font-medium">Belum ada data murid atau presensi di kelas ini untuk bulan ini.</p>
                                 </td>
                             </tr>
                         @endforelse
