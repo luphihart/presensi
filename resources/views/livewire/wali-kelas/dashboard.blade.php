@@ -11,19 +11,13 @@
         </div>
     @else
         <!-- Welcome Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-emerald-600/10 via-teal-500/5 to-transparent p-6 rounded-3xl border border-emerald-500/20">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[var(--color-surface)] p-6 rounded-3xl border border-[var(--color-border)] shadow-sm">
             <div>
                 <h2 class="text-2xl font-bold text-[var(--color-text)]">Selamat Datang, {{ auth()->user()->name }} 👋</h2>
                 <p class="text-sm text-[var(--color-text-muted)] mt-1">
                     Wali Kelas <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ $classRoom->name }}</span> {{ $classRoom->major ? '('.$classRoom->major.')' : '' }} | {{ $todayDate }}
                 </p>
             </div>
-            <a href="{{ route('wali_kelas.leave-requests') }}" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-semibold shadow-md shadow-emerald-500/20 self-start sm:self-auto transition-all flex items-center space-x-2.5 group">
-                <span>📋 Review Izin</span>
-                @if(count($pendingLeaves) > 0)
-                    <span class="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-bold animate-bounce">{{ count($pendingLeaves) }}</span>
-                @endif
-            </a>
         </div>
 
         <!-- Attendance Rate Progress Banner -->
@@ -38,8 +32,8 @@
                 </div>
                 <span class="font-bold text-base text-emerald-600 dark:text-emerald-400">{{ $attendanceRate }}%</span>
             </div>
-            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden p-0.5 border border-[var(--color-border)]">
-                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500" style="width: {{ $attendanceRate }}%"></div>
+            <div class="w-full bg-[var(--color-bg)] rounded-full h-3 overflow-hidden p-0.5 border border-[var(--color-border)]">
+                <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: {{ $attendanceRate }}%"></div>
             </div>
             <div class="flex items-center justify-between text-[11px] text-[var(--color-text-muted)] font-medium">
                 <span>{{ $hadirCount }} dari {{ $studentsCount }} Murid Hadir</span>
@@ -88,18 +82,18 @@
                         <span class="text-base">📩</span>
                         <h3 class="font-bold text-sm text-[var(--color-text)]">Permohonan Izin Pending</h3>
                     </div>
-                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300">
+                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">
                         {{ count($pendingLeaves) }} Menunggu
                     </span>
                 </div>
 
                 <div class="space-y-3">
                     @forelse($pendingLeaves as $leave)
-                        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-[var(--color-border)] flex items-center justify-between text-xs hover:border-emerald-500/30 transition-all">
+                        <div class="p-3.5 rounded-2xl bg-[var(--color-bg)] border border-[var(--color-border)] flex items-center justify-between text-xs transition-all">
                             <div class="space-y-0.5 min-w-0 flex-1 pr-3">
                                 <strong class="text-[var(--color-text)] font-semibold truncate block">{{ $leave->student->user->name }}</strong>
                                 <p class="text-[var(--color-text-muted)] text-[11px]">{{ $leave->type->label() }} • {{ $leave->date->isoFormat('D MMMM YYYY') }}</p>
-                                <p class="text-[11px] text-slate-500 italic line-clamp-1">"{{ $leave->reason }}"</p>
+                                <p class="text-[11px] text-[var(--color-text-muted)] italic line-clamp-1">"{{ $leave->reason }}"</p>
                             </div>
                             <a href="{{ route('wali_kelas.leave-requests') }}" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-semibold text-xs hover:bg-emerald-500 transition-all shrink-0">
                                 Proses
@@ -121,16 +115,16 @@
                         <span class="text-base">📋</span>
                         <h3 class="font-bold text-sm text-[var(--color-text)]">Catatan Izin / Alpa Hari Ini</h3>
                     </div>
-                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[var(--color-text-muted)]">
+                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text-muted)]">
                         {{ count($absentToday) }} Murid
                     </span>
                 </div>
 
                 <div class="space-y-3">
                     @forelse($absentToday as $att)
-                        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-[var(--color-border)] flex items-center justify-between text-xs">
+                        <div class="p-3.5 rounded-2xl bg-[var(--color-bg)] border border-[var(--color-border)] flex items-center justify-between text-xs">
                             <div>
-                                <strong class="text-[var(--color-text)] font-semibold">{{ $att->student->user->name }}</strong>
+                                <strong class="text-[var(--color-text)] font-bold text-xs block">{{ $att->student->user->name }}</strong>
                                 <p class="text-[var(--color-text-muted)] text-[11px] mt-0.5">NIS: {{ $att->student->nis ?? '-' }}</p>
                             </div>
                             <x-ui.badge :type="strtolower($att->status->value)" :value="$att->status->label()" />

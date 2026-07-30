@@ -35,8 +35,8 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                <div class="w-8 h-8 rounded-xl bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                    WK
                 </div>
                 <div>
                     <span class="font-bold text-sm block leading-tight">Wali Kelas</span>
@@ -52,7 +52,7 @@
                 <svg x-show="currentTheme !== 'dark'" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
             </button>
 
-            <div class="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center text-xs ring-2 ring-emerald-500/20">
+            <div class="w-8 h-8 rounded-full bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-bold flex items-center justify-center text-xs">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
         </div>
@@ -80,8 +80,8 @@
            class="fixed inset-y-0 left-0 w-72 bg-[var(--color-surface)] border-r border-[var(--color-border)] p-6 flex flex-col z-50 lg:hidden shadow-2xl overflow-y-auto">
         <div class="flex items-center justify-between mb-6 pb-4 border-b border-[var(--color-border)]">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-emerald-500/20">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                <div class="w-10 h-10 rounded-xl bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-base shadow-sm">
+                    WK
                 </div>
                 <div>
                     <h1 class="font-bold text-base leading-tight text-[var(--color-text)]">Panel Wali Kelas</h1>
@@ -99,8 +99,8 @@
     <!-- Desktop Sidebar -->
     <aside class="hidden lg:flex w-64 bg-[var(--color-surface)] border-r border-[var(--color-border)] p-6 flex-col shrink-0 min-h-screen sticky top-0">
         <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-[var(--color-border)]">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-emerald-500/20">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+            <div class="w-10 h-10 rounded-xl bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-base shadow-sm">
+                WK
             </div>
             <div class="min-w-0 flex-1">
                 <h1 class="font-bold text-base leading-tight text-[var(--color-text)] truncate">Wali Kelas</h1>
@@ -108,14 +108,13 @@
             </div>
         </div>
 
-        <!-- Identity Box -->
-        <div class="mb-6 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-[var(--color-border)] flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center text-sm shrink-0">
+        <!-- Identity Box (Only Show Name) -->
+        <div class="mb-6 p-3 rounded-2xl bg-[var(--color-bg)] border border-[var(--color-border)] flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-bold flex items-center justify-center text-sm shrink-0">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
             <div class="min-w-0 flex-1">
                 <p class="text-xs font-bold text-[var(--color-text)] truncate">{{ auth()->user()->name }}</p>
-                <p class="text-[10px] font-mono text-[var(--color-text-muted)] truncate">NIP: {{ auth()->user()->nip ?? '-' }}</p>
             </div>
         </div>
 
@@ -141,7 +140,7 @@
                         <span class="text-xs font-bold text-[var(--color-text)] block leading-tight">{{ auth()->user()->name }}</span>
                         <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">{{ auth()->user()->homeroomClass->name ?? 'Tanpa Kelas' }}</span>
                     </div>
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold flex items-center justify-center text-sm shadow-sm">
+                    <div class="w-9 h-9 rounded-xl bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-bold flex items-center justify-center text-sm">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     </div>
                 </div>
