@@ -10,7 +10,7 @@
                 <h2 class="text-2xl font-bold text-[var(--color-text)]">Daftar Murid Kelas {{ $classRoom->name }}</h2>
                 <p class="text-sm text-[var(--color-text-muted)]">Data murid terdaftar di kelas yang Anda ampu (Read-Only)</p>
             </div>
-            <div class="px-4 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/20 text-xs font-semibold text-emerald-700 dark:text-emerald-300 self-start sm:self-auto flex items-center space-x-2">
+            <div class="px-4 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/20 text-xs font-semibold text-emerald-700 dark:text-emerald-300 self-start sm:self-auto flex items-center space-x-2 shrink-0">
                 <span>🏫</span>
                 <span>Total {{ $students->total() }} Murid Terdaftar</span>
             </div>
@@ -36,30 +36,30 @@
                 <table class="w-full text-left text-xs">
                     <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-[var(--color-border)] text-[var(--color-text-muted)] uppercase font-semibold">
                         <tr>
-                            <th class="px-6 py-4">NIS</th>
-                            <th class="px-6 py-4">Nama Murid</th>
-                            <th class="px-6 py-4">Email</th>
-                            <th class="px-6 py-4">No. HP</th>
-                            <th class="px-6 py-4">Jenis Kelamin</th>
-                            <th class="px-6 py-4">Streak Presensi</th>
-                            <th class="px-6 py-4">Status Akun</th>
+                            <th class="px-6 py-4 whitespace-nowrap">NIS</th>
+                            <th class="px-6 py-4 min-w-[160px]">Nama Murid</th>
+                            <th class="px-6 py-4 whitespace-nowrap">Email</th>
+                            <th class="px-6 py-4 whitespace-nowrap">No. HP</th>
+                            <th class="px-6 py-4 whitespace-nowrap">Jenis Kelamin</th>
+                            <th class="px-6 py-4 whitespace-nowrap">Streak Presensi</th>
+                            <th class="px-6 py-4 whitespace-nowrap">Status Akun</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[var(--color-border)] text-[var(--color-text)]">
                         @forelse($students as $student)
                             <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-900/40 transition-all">
-                                <td class="px-6 py-4 font-mono font-semibold">{{ $student->nis ?? '-' }}</td>
+                                <td class="px-6 py-4 font-mono font-semibold whitespace-nowrap">{{ $student->nis ?? '-' }}</td>
                                 <td class="px-6 py-4 font-bold">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-8 h-8 rounded-full bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-bold flex items-center justify-center text-xs">
+                                        <div class="w-8 h-8 rounded-full bg-[var(--color-primary-soft)] text-[var(--color-primary)] font-bold flex items-center justify-center text-xs shrink-0">
                                             {{ strtoupper(substr($student->user->name ?? 'M', 0, 1)) }}
                                         </div>
                                         <span>{{ $student->user->name ?? '-' }}</span>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-[var(--color-text-muted)]">{{ $student->user->email ?? '-' }}</td>
-                                <td class="px-6 py-4 text-[var(--color-text-muted)] font-mono">{{ $student->phone ?? '-' }}</td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-[var(--color-text-muted)] whitespace-nowrap">{{ $student->user->email ?? '-' }}</td>
+                                <td class="px-6 py-4 text-[var(--color-text-muted)] font-mono whitespace-nowrap">{{ $student->phone ?? '-' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     @if($student->gender === 'L')
                                         <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300">👨 Laki-Laki</span>
                                     @elseif($student->gender === 'P')
@@ -68,7 +68,7 @@
                                         <span class="text-[var(--color-text-muted)]">-</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 font-semibold">
+                                <td class="px-6 py-4 font-semibold whitespace-nowrap">
                                     @php
                                         $streak = $student->current_streak;
                                         $badgeClass = match(true) {
@@ -83,7 +83,7 @@
                                         <span>{{ $streak }} Hari</span>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     @if($student->is_active)
                                         <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">Aktif</span>
                                     @else

@@ -11,7 +11,7 @@
                 <p class="text-sm text-[var(--color-text-muted)]">Pratinjau matriks presensi bulanan murid kelas yang Anda ampu & unduh Excel</p>
             </div>
 
-            <button wire:click="exportExcel" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm flex items-center justify-center space-x-2 transition-all shrink-0">
+            <button wire:click="exportExcel" type="button" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm flex items-center justify-center space-x-2 transition-all shrink-0 self-start sm:self-auto">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 01-2-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 <span>Unduh Excel Matriks (.xlsx)</span>
             </button>
@@ -30,29 +30,31 @@
         </x-ui.card>
 
         <!-- Status Legend Card -->
-        <div class="p-3 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] flex flex-wrap items-center justify-between gap-3 text-xs">
-            <span class="font-bold text-[var(--color-text-muted)] uppercase text-[10px]">Keterangan Matriks:</span>
-            <div class="flex flex-wrap items-center gap-3">
-                <span class="px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-bold text-[11px]">H = Hadir Tepat Waktu</span>
+        <x-ui.card class="p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <span class="font-bold text-[var(--color-text-muted)] uppercase text-[10px] tracking-wider">Keterangan Matriks:</span>
+            <div class="flex flex-wrap items-center gap-2.5">
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-bold text-[11px]">H = Hadir</span>
                 <span class="px-2.5 py-1 rounded-lg bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 font-bold text-[11px]">T = Terlambat</span>
                 <span class="px-2.5 py-1 rounded-lg bg-sky-100 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 font-bold text-[11px]">I = Izin</span>
                 <span class="px-2.5 py-1 rounded-lg bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 font-bold text-[11px]">S = Sakit</span>
                 <span class="px-2.5 py-1 rounded-lg bg-rose-100 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 font-bold text-[11px]">A = Alpa</span>
             </div>
-        </div>
+        </x-ui.card>
 
         <!-- Matrix Table -->
         <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl overflow-hidden shadow-sm">
-            <div class="p-4 border-b border-[var(--color-border)] flex items-center justify-between">
+            <div class="p-4 border-b border-[var(--color-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <h3 class="font-bold text-sm text-[var(--color-text)]">
                     Matriks Presensi Kelas {{ $classRoom->name }} — {{ \Carbon\Carbon::parse(($reportData['yearMonth'] ?? now()->format('Y-m')) . '-01')->locale('id')->isoFormat('MMMM YYYY') }}
                 </h3>
-                <span class="text-xs text-[var(--color-text-muted)] hidden sm:inline">Geser tabel ke kanan untuk melihat rincian tanggal ➔</span>
+                <span class="text-[11px] text-[var(--color-text-muted)] flex items-center space-x-1">
+                    <span>Geser tabel ➔</span>
+                </span>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-[11px]">
-                    <thead>
+                    <thead class="select-none">
                         <tr class="border-b border-[var(--color-border)] font-semibold text-[var(--color-text-muted)] uppercase bg-slate-50 dark:bg-slate-900/50">
                             <th class="px-3 py-3 border-r border-[var(--color-border)] text-center w-8 bg-slate-50 dark:bg-slate-900 sticky left-0 z-20">No</th>
                             <th class="px-4 py-3 border-r border-[var(--color-border)] min-w-[140px] bg-slate-50 dark:bg-slate-900 sticky left-[33px] z-20 shadow-r">Nama Murid</th>

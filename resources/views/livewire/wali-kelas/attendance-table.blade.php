@@ -10,8 +10,8 @@
                 <h2 class="text-2xl font-bold text-[var(--color-text)]">Data Presensi Kelas {{ $classRoom->name }}</h2>
                 <p class="text-sm text-[var(--color-text-muted)]">Riwayat presensi harian murid di kelas yang Anda ampu</p>
             </div>
-            <div class="text-xs text-[var(--color-text-muted)] font-medium flex items-center space-x-2 bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-xl border border-[var(--color-border)] self-start sm:self-auto">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-ping"></span>
+            <div class="text-xs text-[var(--color-text-muted)] font-medium flex items-center space-x-2 bg-slate-50 dark:bg-slate-900/50 px-3 py-1.5 rounded-xl border border-[var(--color-border)] self-start sm:self-auto shrink-0">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
                 <span>Real-time Monitoring</span>
             </div>
         </div>

@@ -26,13 +26,15 @@
         @endphp
         <x-ui.card class="p-5 space-y-3">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <span class="text-lg">📊</span>
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    </div>
                     <h3 class="font-bold text-sm text-[var(--color-text)]">Tingkat Kehadiran Kelas Hari Ini</h3>
                 </div>
                 <span class="font-bold text-base text-emerald-600 dark:text-emerald-400">{{ $attendanceRate }}%</span>
             </div>
-            <div class="w-full bg-[var(--color-bg)] rounded-full h-3 overflow-hidden p-0.5 border border-[var(--color-border)]">
+            <div class="w-full bg-[var(--color-bg)] rounded-full h-2.5 overflow-hidden border border-[var(--color-border)]">
                 <div class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: {{ $attendanceRate }}%"></div>
             </div>
             <div class="flex items-center justify-between text-[11px] text-[var(--color-text-muted)] font-medium">
@@ -67,7 +69,7 @@
                 <p class="text-[10px] text-[var(--color-text-muted)]">Tanpa keterangan</p>
             </x-ui.card>
 
-            <x-ui.card class="p-4 space-y-1 border-l-4 border-l-amber-500 col-span-2 sm:col-span-1">
+            <x-ui.card class="p-4 space-y-1 border-l-4 border-l-amber-500">
                 <p class="text-[11px] text-amber-600 dark:text-amber-400 font-semibold uppercase tracking-wider">Belum Absen</p>
                 <h3 class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ $belumPresensiCount }}</h3>
                 <p class="text-[10px] text-[var(--color-text-muted)]">Belum presensi hari ini</p>
@@ -78,8 +80,10 @@
             <!-- Pending Leave Requests -->
             <x-ui.card class="p-5 space-y-4">
                 <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-base">📩</span>
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
                         <h3 class="font-bold text-sm text-[var(--color-text)]">Permohonan Izin Pending</h3>
                     </div>
                     <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">
@@ -104,6 +108,7 @@
                             <span class="text-3xl block opacity-60">✨</span>
                             <p class="text-xs text-[var(--color-text-muted)]">Tidak ada permohonan izin yang pending.</p>
                         </div>
+                    @empty
                     @endforelse
                 </div>
             </x-ui.card>
@@ -111,8 +116,10 @@
             <!-- Absences / Special Status Today -->
             <x-ui.card class="p-5 space-y-4">
                 <div class="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-base">📋</span>
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xs">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        </div>
                         <h3 class="font-bold text-sm text-[var(--color-text)]">Catatan Izin / Alpa Hari Ini</h3>
                     </div>
                     <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text-muted)]">

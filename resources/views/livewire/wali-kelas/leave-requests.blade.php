@@ -87,11 +87,11 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($item->status->value === 'pending')
-                                        <div class="flex items-center space-x-2">
-                                            <button @click="confirmAction = 'approve'; confirmId = {{ $item->id }}; confirmStudentName = '{{ addslashes($item->student->user->name ?? 'Murid') }}'; confirmModalOpen = true" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-sm transition-all">
+                                        <div class="flex items-center space-x-2 shrink-0">
+                                            <button @click="confirmAction = 'approve'; confirmId = {{ $item->id }}; confirmStudentName = '{{ addslashes($item->student->user->name ?? 'Murid') }}'; confirmModalOpen = true" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-sm transition-all whitespace-nowrap">
                                                 ✓ Setujui
                                             </button>
-                                            <button @click="confirmAction = 'reject'; confirmId = {{ $item->id }}; confirmStudentName = '{{ addslashes($item->student->user->name ?? 'Murid') }}'; confirmModalOpen = true" type="button" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs shadow-sm transition-all">
+                                            <button @click="confirmAction = 'reject'; confirmId = {{ $item->id }}; confirmStudentName = '{{ addslashes($item->student->user->name ?? 'Murid') }}'; confirmModalOpen = true" type="button" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs shadow-sm transition-all whitespace-nowrap">
                                                 ✕ Tolak
                                             </button>
                                         </div>
@@ -139,8 +139,9 @@
                     <button @click="confirmModalOpen = false" type="button" class="flex-1 py-2.5 rounded-xl border border-[var(--color-border)] text-xs font-semibold text-[var(--color-text)] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
                         Batal
                     </button>
-                    <button @click="if(confirmAction === 'approve') { $wire.approve(confirmId); } else { $wire.reject(confirmId); } confirmModalOpen = false;" type="button" class="flex-1 py-2.5 rounded-xl text-white text-xs font-semibold shadow-md transition-all" :class="confirmAction === 'approve' ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500'">
-                        Ya, Konfirmasi
+                    <button @click="if(confirmAction === 'approve') { $wire.approve(confirmId); } else { $wire.reject(confirmId); } confirmModalOpen = false;" type="button" class="flex-1 py-2.5 rounded-xl text-white text-xs font-semibold shadow-md transition-all flex items-center justify-center space-x-1" :class="confirmAction === 'approve' ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500'">
+                        <span x-text="confirmAction === 'approve' ? '✓' : '✕'"></span>
+                        <span>Ya, Konfirmasi</span>
                     </button>
                 </div>
             </div>
