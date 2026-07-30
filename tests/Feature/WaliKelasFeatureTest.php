@@ -131,4 +131,29 @@ class WaliKelasFeatureTest extends TestCase
             'reviewed_by' => $waliKelas->id,
         ]);
     }
+
+    public function test_wali_kelas_can_render_all_pages()
+    {
+        $schoolYear = SchoolYear::create([
+            'name' => '2026/2027',
+            'start_date' => '2026-07-01',
+            'end_date' => '2027-06-30',
+            'is_active' => true,
+        ]);
+        $waliKelas = User::create([
+            'name' => 'Pak Wali',
+            'nip' => '1234567890',
+            'email' => '1234567890@walikelas.com',
+            'password' => bcrypt('walikelas123'),
+            'role' => UserRole::WaliKelas,
+        ]);
+        $classRoom = ClassRoom::create(['name' => '10 RPL 1', 'school_year_id' => $schoolYear->id, 'wali_kelas_id' => $waliKelas->id]);
+
+        Livewire::actingAs($waliKelas)->test(\App\Livewire\WaliKelas\Dashboard::class)->assertStatus(200);
+        Livewire::actingAs($waliKelas)->test(\App\Livewire\WaliKelas\StudentList::class)->assertStatus(200);
+        Livewire::actingAs($waliKelas)->test(\App\Livewire\WaliKelas\AttendanceTable::class)->assertStatus(200);
+        Livewire::actingAs($waliKelas)->test(\App\Livewire\WaliKelas\LeaveRequests::class)->assertStatus(200);
+        Livewire::actingAs($waliKelas)->test(\App\Livewire\WaliKelas\Report::class)->assertStatus(200);
+        Livewire::actingAs($waliKelas)->test(\App\Livewire\WaliKelas\ChangePassword::class)->assertStatus(200);
+    }
 }

@@ -108,7 +108,6 @@
                             <span class="text-3xl block opacity-60">✨</span>
                             <p class="text-xs text-[var(--color-text-muted)]">Tidak ada permohonan izin yang pending.</p>
                         </div>
-                    @empty
                     @endforelse
                 </div>
             </x-ui.card>
