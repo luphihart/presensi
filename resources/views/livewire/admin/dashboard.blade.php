@@ -225,7 +225,7 @@
 
                         <div class="min-w-0">
                             <p class="font-bold text-xs text-[var(--color-text)] truncate">{{ $st->user->name }}</p>
-                            <p class="text-[11px] text-[var(--color-text-muted)] truncate">Kelas {{ $st->classRoom?->full_name ?? '-' }} • NIS {{ $st->nis }}</p>
+                            <p class="text-[11px] text-[var(--color-text-muted)] truncate">Kelas {{ trim(($st->classRoom->name ?? '') . ' ' . ($st->classRoom->major ?? '')) ?: '-' }} • NIS {{ $st->nis }}</p>
                         </div>
                     </div>
 
