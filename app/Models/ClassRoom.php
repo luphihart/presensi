@@ -19,6 +19,14 @@ class ClassRoom extends Model
         'major',
     ];
 
+    public function getFullNameAttribute(): string
+    {
+        if (!empty($this->major) && !str_contains(strtolower($this->name), strtolower($this->major))) {
+            return "{$this->name} {$this->major}";
+        }
+        return $this->name ?? '';
+    }
+
     public function schoolYear(): BelongsTo
     {
         return $this->belongsTo(SchoolYear::class);
