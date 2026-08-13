@@ -1,4 +1,4 @@
-<div class="space-y-6" x-data="{ previewPhotoUrl: null, previewPhotoTitle: '' }">
+<div class="space-y-6" x-data="{ previewPhotoUrl: null, previewPhotoTitle: '', announcementDismissed: sessionStorage.getItem('announcement_dismissed_{{ $announcements->first()?->id }}') === '1' }">
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
@@ -17,6 +17,63 @@
         </div>
         <livewire:shared.notification-center />
     </div>
+
+    <!-- Announcement Banner (Terbaru, Dismissable) -->
+    @if($announcements->isNotEmpty())
+        @php $latestAnnouncement = $announcements->first(); @endphp
+        <div
+            x-show="!announcementDismissed"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 -translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-2"
+            class="relative flex items-start gap-3 px-4 py-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 shadow-sm overflow-hidden"
+        >
+            <!-- Accent bar kiri -->
+            <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl bg-amber-400"></div>
+
+            <!-- Icon megaphone -->
+            <div class="w-8 h-8 rounded-xl bg-amber-400 text-white flex items-center justify-center shrink-0 ml-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            </div>
+
+            <!-- Konten -->
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-0.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">📢 Pengumuman Sekolah</span>
+                    <span class="text-[10px] text-amber-500 dark:text-amber-500">
+                        {{ $latestAnnouncement->published_at?->locale('id')->isoFormat('D MMM') }}
+                    </span>
+                </div>
+                <a href="{{ route('student.announcements') }}" class="block">
+                    <p class="text-sm font-bold text-amber-900 dark:text-amber-100 leading-snug line-clamp-1 hover:underline">
+                        {{ $latestAnnouncement->title }}
+                    </p>
+                    <p class="text-xs text-amber-700 dark:text-amber-300 line-clamp-2 mt-0.5 leading-relaxed">
+                        {{ $latestAnnouncement->content }}
+                    </p>
+                </a>
+                @if($announcements->count() > 1)
+                    <a href="{{ route('student.announcements') }}" class="inline-flex items-center gap-1 mt-1.5 text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:underline">
+                        +{{ $announcements->count() - 1 }} pengumuman lainnya
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                @endif
+            </div>
+
+            <!-- Tombol tutup (dismiss) -->
+            <button
+                type="button"
+                @click="announcementDismissed = true; sessionStorage.setItem('announcement_dismissed_{{ $latestAnnouncement->id }}', '1')"
+                class="w-7 h-7 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400 hover:bg-amber-300 dark:hover:bg-amber-800 flex items-center justify-center shrink-0 transition-colors"
+                aria-label="Tutup pengumuman"
+            >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+    @endif
 
     <!-- Birthday Banner (Gen Z / Alpha style) -->
     @if($isBirthday)
@@ -257,44 +314,13 @@
         </a>
     @endif
 
-    <!-- Announcements Section (Tampil di bawah shortcut) -->
-    @if(count($announcements) > 0)
-        <div class="rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm">
-            <!-- Header dengan gradient -->
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3">
-                <h3 class="text-white font-bold text-xs uppercase tracking-wider">Pengumuman Sekolah</h3>
-            </div>
-
-            <!-- Daftar pengumuman -->
-            <div class="bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
-                @foreach($announcements as $announcement)
-                    <div class="px-4 py-3.5 space-y-1.5">
-                        <!-- Judul + badge tanggal -->
-                        <div class="flex items-start justify-between gap-2">
-                            <h4 class="font-bold text-sm leading-snug line-clamp-1 flex-1 text-[var(--color-text)]">
-                                {{ $announcement->title }}
-                            </h4>
-                            <span class="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
-                                {{ $announcement->published_at ? $announcement->published_at->locale('id')->isoFormat('D MMM') : '' }}
-                            </span>
-                        </div>
-                        <!-- Preview isi — hanya 2 baris -->
-                        <p class="text-xs line-clamp-2 leading-relaxed text-[var(--color-text-muted)]">
-                            {{ $announcement->content }}
-                        </p>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Tombol Baca Selengkapnya -->
-            <a href="{{ route('student.announcements') }}"
-               class="flex items-center justify-center gap-1.5 w-full py-3 border-t border-[var(--color-border)] bg-[var(--color-bg)] hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 text-[var(--color-primary)] text-xs font-bold transition-colors">
-                Baca Selengkapnya
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                </svg>
-            </a>
-        </div>
+    <!-- Link Lihat Semua Pengumuman (di bawah konten utama) -->
+    @if($announcements->isNotEmpty())
+        <a href="{{ route('student.announcements') }}" class="flex items-center justify-center gap-2 py-3 rounded-2xl border border-dashed border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 text-xs font-semibold hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            Lihat Semua Pengumuman Sekolah
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </a>
     @endif
 
     <!-- Photo Preview Pop-up Modal -->
