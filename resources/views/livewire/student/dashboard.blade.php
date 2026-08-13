@@ -146,6 +146,25 @@
         </div>
     </x-ui.card>
 
+    <!-- Quick Shortcuts -->
+    <div class="grid grid-cols-2 gap-4">
+        <a href="{{ route('student.leave.index') }}" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center hover:border-[var(--color-primary)] transition-all shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 flex items-center justify-center mx-auto mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-[var(--color-text)]">Ajukan Izin</p>
+            <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Sakit atau izin</p>
+        </a>
+
+        <a href="{{ route('student.history') }}" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center hover:border-[var(--color-primary)] transition-all shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 flex items-center justify-center mx-auto mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-[var(--color-text)]">Lihat Riwayat</p>
+            <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Kalender presensi</p>
+        </a>
+    </div>
+
     <!-- Streak Kehadiran Card (Gamifikasi) -->
     @if($student)
         <div class="rounded-3xl p-5 bg-gradient-to-br from-amber-500/10 via-indigo-500/10 to-purple-500/10 border border-amber-200 dark:border-amber-900/40 shadow-sm space-y-3">
@@ -237,25 +256,6 @@
             </div>
         </a>
     @endif
-
-    <!-- Quick Shortcuts -->
-    <div class="grid grid-cols-2 gap-4">
-        <a href="{{ route('student.leave.index') }}" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center hover:border-[var(--color-primary)] transition-all shadow-sm">
-            <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 flex items-center justify-center mx-auto mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            </div>
-            <p class="text-sm font-semibold text-[var(--color-text)]">Ajukan Izin</p>
-            <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Sakit atau izin</p>
-        </a>
-
-        <a href="{{ route('student.history') }}" class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 text-center hover:border-[var(--color-primary)] transition-all shadow-sm">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 flex items-center justify-center mx-auto mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            </div>
-            <p class="text-sm font-semibold text-[var(--color-text)]">Lihat Riwayat</p>
-            <p class="text-xs text-[var(--color-text-muted)] mt-0.5">Kalender presensi</p>
-        </a>
-    </div>
 
     <!-- Announcements Section (Tampil di bawah shortcut) -->
     @if(count($announcements) > 0)
